@@ -1,0 +1,6 @@
+# Ignore ./idea/ dir
+./idea/
+
+# Ignore .idea files
+*.idea
+**/*.idea
