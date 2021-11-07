@@ -3,31 +3,47 @@
 
 1. Найдите полный хеш и комментарий коммита, хеш которого начинается на aefea.
     Решение: 
-    Полный хеш коммита -  aefead2207ef7e2aa5dc81a34aedf0cad4c32545
-    Комментарий коммита - Update CHANGELOG.md
+     Полный хеш коммита -  aefead2207ef7e2aa5dc81a34aedf0cad4c32545
+     Комментарий коммита - Update CHANGELOG.md
     Команда - git show -q aefea
 
     
 2. Какому тегу соответствует коммит 85024d3?
     Решение: 
-    Коммит 85024d3100126de36331c6982bfaac02cdab9e76 соответвует tag: v0.12.23
+     Коммит 85024d3100126de36331c6982bfaac02cdab9e76 соответвует "tag: v0.12.23"
     Команда - git show -q 85024d3 
-        или - git tag --points-at 85024d
-        или - git describe --all --exact-match 85024d
+       Также, можно использовать команды:
+        - git tag --points-at 85024d - просто покажет тег "v0.12.23"
+        - git describe --all --exact-match 85024d -  выведет тег в формате "tags/v0.12.23"
     
 
 3. Сколько родителей у коммита b8d720? Напишите их хеши.
     Решение: 
-    Команда - git show 56cd7859e покажет нам, что коммит является рузльтатом слияния двух коммитов Merge: 58dcac4b7 ffbcf5581
-        просмотр родителя №1 - git show -q 56cd7859e^1
-        просмотр родителя №2 - git show -q 56cd7859e^2
-        получить хэши всех родителей - git rev-parse 56cd7859e^@
-        узнать хэши родителей с помощью git log - git log --pretty=format:'%P %s' -n 1 --graph 56cd7859e
+     У коммита b8d720 два родителя : 58dcac4b7 и ffbcf5581
+    Команда - git show 56cd7859e покажет нам, что коммит является результатом слияния двух коммитов Merge: 58dcac4b7 ffbcf5581
+        Также, можно посмотреть родителей с помощью команд:
+         просмотр родителя №1 - git show -q 56cd7859e^1 
+         просмотр родителя №2 - git show -q 56cd7859e^2
+         получить хэши всех родителей - git rev-parse 56cd7859e^@   (выведет полные хэши родителей на отдельных строках без дополнительной информации)
+         узнать хэши родителей с помощью git log - git log --pretty=format:'%P %s' -n 1 --graph 56cd7859e   (покажет хэши родителей коммита и сообщение)
 
     
 4. Перечислите хеши и комментарии всех коммитов которые были сделаны между тегами v0.12.23 и v0.12.24.
     Решение:
-    
+     Вывод:
+     33ff1c03b (tag: v0.12.24) v0.12.24
+     b14b74c49 [Website] vmc provider links
+     3f235065b Update CHANGELOG.md
+     6ae64e247 registry: Fix panic when server is unreachable
+     5c619ca1b website: Remove links to the getting started guide's old location
+     06275647e Update CHANGELOG.md
+     d5f9411f5 command: Fix bug when using terraform login on Windows
+     4b6d06cc5 Update CHANGELOG.md
+     dd01a3507 Update CHANGELOG.md
+     225466bc3 Cleanup after v0.12.23 release
+    Команда - git log --oneline v0.12.23..v0.12.24
+
+
 5. Найдите коммит в котором была создана функция func providerSource, ее определение в коде выглядит так func providerSource(...) (вместо троеточего перечислены аргументы).
     Решение: 
 
