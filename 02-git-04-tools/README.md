@@ -97,5 +97,13 @@
 
 #    
 7. Кто автор функции synchronizedWriters?
-    #### Решение: 
+    #### Решение:
+    * Автор функции **Martin Atkinse**, 
+      * bdfea50cc 2020-11-30 18:02:04 -0500 Author: James Bardine E-mail: j.bardin@gmail.com
+      * 5ac311e2a 2017-05-03 16:25:41 -0700 Author: Martin Atkinse E-mail: mart@degeneration.co.uk
+    * Команда:
+      > git log -S'func synchronizedWriters' --pretty=format:'%h %ai Author: %ane E-mail: %ae'
+      
+
+    
 
