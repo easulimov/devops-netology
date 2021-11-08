@@ -9,3 +9,5 @@
 2.2. [x] [Основы Git](02-git-02-base/README.md)
 
 2.3. [x] [Ветвления в Git](02-git-03-branching/)
+
+2.4. [x] [2.4. Инструменты Git](02-git-04-tools/)
