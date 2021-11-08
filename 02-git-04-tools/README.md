@@ -45,8 +45,8 @@
      
 #
 4. Перечислите хеши и комментарии всех коммитов которые были сделаны между тегами v0.12.23 и v0.12.24.
-    ####Решение:
-     *Вывод*:
+    #### Решение:
+     * Хеши и комментарии всех коммитов между тегами v0.12.23 и v0.12.24:
      33ff1c03b (tag: v0.12.24) v0.12.24
      b14b74c49 [Website] vmc provider links
      3f235065b Update CHANGELOG.md
@@ -57,11 +57,19 @@
      4b6d06cc5 Update CHANGELOG.md
      dd01a3507 Update CHANGELOG.md
      225466bc3 Cleanup after v0.12.23 release
-    Команда - git log --oneline v0.12.23..v0.12.24
+    * Команда:
+        > git log --oneline v0.12.23..v0.12.24
 
 #
 5. Найдите коммит в котором была создана функция func providerSource, ее определение в коде выглядит так func providerSource(...) (вместо троеточего перечислены аргументы).
-    Решение: 
+    #### Решение: 
+    * Функция "func providerSource" была создана в коммите **8c928e835** (8c928e83589d90a031f811fae52a81be7153e82f)
+    * Команда:
+        > git log --oneline -S 'func providerSource'
+    * Также, для дополнительного удобства, можно добавить к выводу команды даты создания коммитов:
+        > git log --pretty='%aD %h %s' -S 'func providerSource'
+        * Tue, 21 Apr 2020 16:28:59 -0700 5af1e6234 main: Honor explicit provider_installation CLI config when present
+        * Thu, 2 Apr 2020 18:04:39 -0700 8c928e835 main: Consult local directories as potential mirrors of providers
 
 #
 6. Найдите все коммиты в которых была изменена функция globalPluginDirs.
