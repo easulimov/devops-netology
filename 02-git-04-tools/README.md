@@ -87,7 +87,7 @@
             commands.go:    helperPlugins := pluginDiscovery.FindPlugins("credentials", globalPluginDirs())
             internal/command/cliconfig/config_unix.go:              // FIXME: homeDir gets called from globalPluginDirs during init, before
             plugins.go:// globalPluginDirs returns directories that should be searched for
-            plugins.go:func globalPluginDirs() []string {
+            **plugins.go:func globalPluginDirs() []string {**
 
         > git log -L :globalPluginDirs:plugins.go  -s --oneline
         * выводим все изменения произошедшие с функцией **globalPluginDirs** в файле **plugins.go**
