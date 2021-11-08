@@ -83,11 +83,11 @@
      * Выполнено в два шага:
         > git grep "globalPluginDirs"
         * в выводе ищем файл в котором определяется функция, в данном случае **plugins.go**
-        >>commands.go:            GlobalPluginDirs: globalPluginDirs(),
-commands.go:    helperPlugins := pluginDiscovery.FindPlugins("credentials", globalPluginDirs())
-internal/command/cliconfig/config_unix.go:              // FIXME: homeDir gets called from globalPluginDirs during init, before
-plugins.go:// globalPluginDirs returns directories that should be searched for
-plugins.go:func globalPluginDirs() []string {
+          >>commands.go:            GlobalPluginDirs: globalPluginDirs(),
+            commands.go:    helperPlugins := pluginDiscovery.FindPlugins("credentials", globalPluginDirs())
+            internal/command/cliconfig/config_unix.go:              // FIXME: homeDir gets called from globalPluginDirs during init, before
+            plugins.go:// globalPluginDirs returns directories that should be searched for
+            plugins.go:func globalPluginDirs() []string {
 
         > git log -L :globalPluginDirs:plugins.go  -s --oneline
         * выводим все изменения произошедшие с функцией **globalPluginDirs** в файле **plugins.go**
