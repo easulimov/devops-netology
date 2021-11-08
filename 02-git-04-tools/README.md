@@ -73,9 +73,29 @@
 
 #
 6. Найдите все коммиты в которых была изменена функция globalPluginDirs.
-    Решение:
+    #### Решение:
+    * Список коммитов в которых изменена функция globalPluginDirs:
+      * 78b122055 Remove config.go and update things using its aliases
+      * 52dbf9483 keep .terraform.d/plugins for discovery
+      * 41ab0aef7 Add missing OS_ARCH dir to global plugin paths
+      * 66ebff90c move some more plugin search path logic to command
+      * 8364383c3 Push plugin discovery down into command package
+     * Выполнено в два шага:
+        > git grep "globalPluginDirs"
+        * в выводе ищем файл в котором определяется функция, в данном случае **plugins.go**
+        >>commands.go:            GlobalPluginDirs: globalPluginDirs(),
+commands.go:    helperPlugins := pluginDiscovery.FindPlugins("credentials", globalPluginDirs())
+internal/command/cliconfig/config_unix.go:              // FIXME: homeDir gets called from globalPluginDirs during init, before
+plugins.go:// globalPluginDirs returns directories that should be searched for
+plugins.go:func globalPluginDirs() []string {
+
+        > git log -L :globalPluginDirs:plugins.go  -s --oneline
+        * выводим все изменения произошедшие с функцией **globalPluginDirs** в файле **plugins.go**
+
+     
+
 
 #    
 7. Кто автор функции synchronizedWriters?
-    Решение: 
+    #### Решение: 
 
