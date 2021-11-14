@@ -1,11 +1,11 @@
 1. Установите средство виртуализации Oracle VirtualBox.
-### Решение:
+   ### Решение:
    * sudo apt update
    * sudo apt install virtualbox
    * sudo apt install virtualbox-ext-pack -y
    
 2. Установите средство автоматизации Hashicorp Vagrant.
-### Решение:
+   ### Решение:
    * https://www.vagrantup.com/downloads
    * curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
    * sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
