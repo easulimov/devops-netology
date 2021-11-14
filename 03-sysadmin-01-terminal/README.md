@@ -14,7 +14,7 @@
    * iTerm2 в Mac OS X
    * Windows Terminal в Windows
    * выбрать цветовую схему, размер окна, шрифтов и т.д.
-     * Изменена цветовая схема (Terminal - Preferences). 
+     * Изменена цветовая схема (Terminal - Preferences). [Скриншот](https://github.com/easulimov/devops-netology/blob/da9bf404029e694d88c0acffa87a56d2e41bcd16/03-sysadmin-01-terminal/img/Terminal.%20New%20profile.png)
    * почитать о кастомизации PS1/применить при желании.
    
 
