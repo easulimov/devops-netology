@@ -73,5 +73,21 @@
 
 7. Команда vagrant ssh из директории, в которой содержится Vagrantfile, позволит вам оказаться внутри виртуальной машины без каких-либо дополнительных настроек.
    Попрактикуйтесь в выполнении обсуждаемых команд в терминале Ubuntu.
+   ```
+       gendalf@pc01:~/vagrantdir$ vagrant ssh
+       Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-80-generic x86_64)
+
+       * Documentation:  https://help.ubuntu.com
+       * Management:     https://landscape.canonical.com
+       * Support:        https://ubuntu.com/advantage
+
+       System information as of Sun 14 Nov 2021 06:09:17 PM UTC
+
+       System load:  0.0               Processes:             127
+       Usage of /:   2.4% of 61.31GB   Users logged in:       0
+       Memory usage: 7%                IPv4 address for eth0: 10.0.2.15
+       Swap usage:   0%
+    
+   ```
    
 
