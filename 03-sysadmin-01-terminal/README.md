@@ -2,7 +2,7 @@
    * sudo apt update
    * sudo apt install virtualbox
    * sudo apt install virtualbox-ext-pack -y
-   * 
+   
 2. Установите средство автоматизации Hashicorp Vagrant.
    * https://www.vagrantup.com/downloads
    * curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -15,6 +15,7 @@
    * Windows Terminal в Windows
    * выбрать цветовую схему, размер окна, шрифтов и т.д.
      * Изменена цветовая схема (Terminal - Preferences). [Скриншот](https://github.com/easulimov/devops-netology/blob/da9bf404029e694d88c0acffa87a56d2e41bcd16/03-sysadmin-01-terminal/img/Terminal.%20New%20profile.png)
+     * 
    * почитать о кастомизации PS1/применить при желании.
    
 
