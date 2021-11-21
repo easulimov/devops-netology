@@ -80,7 +80,6 @@
            vagrant@vagrant:~$ echo "Hello from PID 1350" > /proc/$$/fd/5
            Hello from PID 1350
            vagrant@vagrant:~$ exit
-           exit
            vagrant@vagrant:~$ echo $$
            1341
            vagrant@vagrant:~$ ls -lahF /proc/1350/fd/5
