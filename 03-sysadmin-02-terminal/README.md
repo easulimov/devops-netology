@@ -10,7 +10,7 @@
     #### Решение:
     Процесс `systemd` (/sbin/init является символической ссылкой на /lib/systemd/systemd).
     `ps -q 1 -o comm=` - покажет нам **systemd**
-    
+    Проверим:
     `ps aux | head -2`
     
     ```
@@ -31,7 +31,20 @@
 
 4. Как будет выглядеть команда, которая перенаправит вывод stderr `ls` на другую сессию терминала?
     #### Решение:
-
+    `ls -lah /root 2>/dev/pts/1`
+    * Терминал 1:
+      ```
+          vagrant@vagrant:~$ tty
+          /dev/pts/0
+          vagrant@vagrant:~$ ls -lah /root 2>/dev/pts/1
+          vagrant@vagrant:~$    
+      ```
+    * Терминал 2:
+      ```
+          vagrant@vagrant:~$ tty
+          /dev/pts/1
+          vagrant@vagrant:~$ ls: cannot open directory '/root': Permission denied
+      ```
 5. Получится ли одновременно передать команде файл на stdin и вывести ее stdout в другой файл? Приведите работающий пример.
     #### Решение:
 
