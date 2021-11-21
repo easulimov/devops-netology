@@ -99,14 +99,64 @@
     * Cтандартный поток ошибок 2 связали со стандартным потоком вывода 1 - `2>&1`
     * Стандартный поток вывода 1 связали с дескриптором 3 - `1>&3`
     Таким образом, с помощью дескриптора 3 выполнена замена потоков. Вывод stderr передан в на stdin `wc -l` результатом 771. При этом сохранен вывод на pty `/home/vagrant/.bashrc` и `/etc/skel/.bashrc`
-    9. Что выведет команда `cat /proc/$$/environ`? Как еще можно получить аналогичный по содержанию вывод?
+    
+9. Что выведет команда `cat /proc/$$/environ`? Как еще можно получить аналогичный по содержанию вывод?
     #### Решение:
+    * Команда `cat /proc/$$/environ` - вывела переменные окружения
+    * Аналогичный вывод, в отформатированном виде можно получить с помощью `printenv`
 
 10. Используя `man`, опишите что доступно по адресам `/proc/<PID>/cmdline`, `/proc/<PID>/exe`.
     #### Решение:
+    `man 5 proc`
+    * `/proc/<PID>/cmdline` -  Этот доступный только для чтения файл содержит полную командную строку для процесса, если только процесс не является зомби. В последнем случае в этом файле ничего нет: то есть чтение этого файла вернет 0 символов. Аргументы командной строки появляются в этом файле в виде набора строк, разделенных нулевыми байтами ('\ 0'), с последующим нулевым байтом после последней строки.
+      * Например, обратим внимание на поле CMD в выводе.
+       
+      ```
+          USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+          root           1  0.0  0.5 101804 11100 ?        Ss   16:26   0:00 /sbin/init
+          root           2  0.0  0.0      0     0 ?        S    16:26   0:00 [kthreadd]
+	  ...
+	  root         395  0.0  0.2  21076  5068 ?        Ss   16:26   0:00 /lib/systemd/systemd-udevd
+          systemd+     401  0.0  0.3  26604  7632 ?        Ss   16:26   0:00 /lib/systemd/systemd-networkd
+	  ...
+	  vagrant     1864  0.0  0.4  18384  9332 ?        Ss   18:40   0:00 /lib/systemd/systemd --user
+          vagrant     1865  0.0  0.1 103032  3276 ?        S    18:40   0:00 (sd-pam)
+          root        1869  0.0  0.0      0     0 ?        I    18:40   0:00 [kworker/1:3]
+          vagrant     1899  0.0  0.3  13952  6256 ?        R    18:40   0:00 sshd: vagrant@pts/0
+          vagrant     1900  0.0  0.2   9836  4144 pts/0    Ss   18:40   0:00 -bash
+          vagrant     1955  0.0  0.1  11492  3416 pts/0    R+   18:56   0:00 ps aux
+      ``` 
+      * А теперь посмотрим примеры вывода `/proc/<PID>/cmdline` подставляя PID
+      ```
+          vagrant@vagrant:~$ cat /proc/1/cmdline 
+          /sbin/initvagrant@vagrant:~$ cat /proc/1899/cmdline 
+          sshd: vagrant@pts/0vagrant@vagrant:~$ cat /proc/1900/cmdline 
+          -bashvagrant@vagrant:~$ 
+      ``` 
+      * По сути `/proc/<PID>/cmdline` содержит информацию об исполняемых файлах процесса
+      
+    * `/proc/<PID>/exe`- В Linux 2.2 и более поздних версиях этот файл представляет собой символическую ссылку, содержащую фактический путь к исполняемой команде. Эту символическую ссылку можно разыменовать обычным образом; попытка открыть его откроет исполняемый файл.
+      * Например:
+       
+      ```
+         vagrant@vagrant:~$ sudo ls -l /proc/1/exe
+         lrwxrwxrwx 1 root root 0 Nov 21 15:39 /proc/1/exe -> /usr/lib/systemd/systemd
+         vagrant@vagrant:~$ sudo ls -l /proc/1899/exe
+         lrwxrwxrwx 1 root root 0 Nov 21 19:09 /proc/1899/exe -> /usr/sbin/sshd
+         vagrant@vagrant:~$ sudo ls -l /proc/1900/exe
+         lrwxrwxrwx 1 vagrant vagrant 0 Nov 21 18:41 /proc/1900/exe -> /usr/bin/bash
+         vagrant@vagrant:~$ 
+         
+      ```        
 
 11. Узнайте, какую наиболее старшую версию набора инструкций SSE поддерживает ваш процессор с помощью `/proc/cpuinfo`.
     #### Решение:
+    * Процессор поддерживает `sse4_2`
+    ``` 
+         vagrant@vagrant:~$ grep sse /proc/cpuinfo
+         flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc          rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor          lahf_lm abm 3dnowprefetch invpcid_single pti fsgsbase avx2 invpcid rdseed clflushopt md_clear flush_l1d arch_capabilities
+         flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc          rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor          lahf_lm abm 3dnowprefetch invpcid_single pti fsgsbase avx2 invpcid rdseed clflushopt md_clear flush_l1d arch_capabilities   
+    ```
 
 12. При открытии нового окна терминала и `vagrant ssh` создается новая сессия и выделяется pty. Это можно подтвердить командой `tty`, которая упоминалась в лекции 3.2. Однако:
 
