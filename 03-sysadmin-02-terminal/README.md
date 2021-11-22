@@ -206,10 +206,7 @@
        
        
     ```
-
-# echo 0 > /proc/sys/kernel/yama/ptrace_scope
-as root, or permanently by editing the file /etc/sysctl.d/10-ptrace.conf, which also contains more information about exactly what this setting accomplishes.
-
+    
 14. `sudo echo string > /root/new_file` не даст выполнить перенаправление под обычным пользователем, так как перенаправлением занимается процесс shell'а, который запущен без `sudo` под вашим пользователем. Для решения данной проблемы можно использовать конструкцию `echo string | sudo tee /root/new_file`. Узнайте что делает команда `tee` и почему в отличие от `sudo echo` команда с `sudo tee` будет работать.
     #### Решение:
 
