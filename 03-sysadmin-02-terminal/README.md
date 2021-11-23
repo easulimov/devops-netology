@@ -4,6 +4,15 @@
 
 2. Какая альтернатива без pipe команде `grep <some_string> <some_file> | wc -l`? `man grep` поможет в ответе на этот вопрос. Ознакомьтесь с [документом](http://www.smallo.ruhr.de/award.html) о других подобных некорректных вариантах использования pipe.
     #### Решение:
+    * Доработка по заданию:
+    ```
+        vagrant@vagrant:~$ grep alias .bashrc | wc -l
+        16
+        vagrant@vagrant:~$ grep -c alias .bashrc
+        16
+        vagrant@vagrant:~$ 
+    
+    ```
     `grep -n -i alias .bashrc` - за счет ключа `-n`, к выводу добавятся номера строк.
     
 3. Какой процесс с PID `1` является родителем для всех процессов в вашей виртуальной машине Ubuntu 20.04?
