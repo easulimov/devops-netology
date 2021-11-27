@@ -106,6 +106,7 @@
     
 6. Какой системный вызов использует `uname -a`? Приведите цитату из man по этому системному вызову, где описывается альтернативное местоположение в `/proc`, где можно узнать версию ядра и релиз ОС.
     ### Решение:
+    * `uname -a` - использует системный вызов `uname()`
     * `strace uname -a`
     ```
         vagrant@vagrant:~$ strace uname -a
@@ -124,7 +125,8 @@
         vagrant@vagrant:~$ 
     ```
     * `man 2 uname`
-    >> Part of the utsname information is also accessible via /proc/sys/kernel/{ostype, hostname, osrelease, version, domainname}.
+    > Part of the utsname information is also accessible via /proc/sys/kernel/{ostype, hostname, osrelease, version, domainname}.
+    
 
 7. Чем отличается последовательность команд через `;` и через `&&` в bash? Например:
     ```bash
@@ -135,7 +137,25 @@
     ```
     Есть ли смысл использовать в bash `&&`, если применить `set -e`?
     ### Решение:   
-    
+    * `;` - выполнение команд одной за другой
+    * `&&` - используется для объединения команд таким образом, что следующая команда запускается тогда и только тогда, когда предыдущая команда завершилась без ошибок (выйдет с кодом возврата 0)
+      * Таким образом, `test -d /tmp/some_dir && echo Hi` - выведет `Hi`, если будет существовать директория `/tmp/some_dir` 
+    * Если установлено `set -e`, оболочка завершает работу, когда простая команда в списке команд завершается с ненулевым значением (FALSE). Этого не происходит в ситуациях, когда код выхода уже проверен (если, while, until, ||, &&). То есть, в случае, когда проверка выполняется `&&`, то `set -e` не имеет смысла:
+    ```
+        vagrant@vagrant:~$ set -e
+        vagrant@vagrant:~$ test -d /tmp/some_dir && echo Hi
+        vagrant@vagrant:~$ 
+
+    ```
+        * Но если мы изменим поведение, завершиться сеанс оболочки:
+    ```
+       vagrant@vagrant:~$ test -d /tmp/some_dir
+       Connection to 127.0.0.1 closed.
+       MacBook-Pro-admin:vagrant admin$ 
+       
+    ```
+        
+     
 8. Из каких опций состоит режим bash `set -euxo pipefail` и почему его хорошо было бы использовать в сценариях?
     ### Решение:  
 
