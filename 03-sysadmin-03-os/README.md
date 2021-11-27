@@ -21,7 +21,35 @@
     ```
     Используя `strace` выясните, где находится база данных `file` на основании которой она делает свои догадки.
     ### Решение:
-    
+    * База `file` находится в `/usr/share/misc/magic.mgc` (cтрока 20 в выводе команды):
+        ```
+            vagrant@vagrant:~$ strace -fe open,openat,read,write,execve file /dev/tty > strace.test 2>&1 && nl strace.test 
+                 1	execve("/usr/bin/file", ["file", "/dev/tty"], 0x7fff8e097018 /* 24 vars */) = 0
+                 2	openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+                 3	openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libmagic.so.1", O_RDONLY|O_CLOEXEC) = 3
+                 4	read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0 N\0\0\0\0\0\0"..., 832) = 832
+                 5	openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+                 6	read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360q\2\0\0\0\0\0"..., 832) = 832
+                 7	openat(AT_FDCWD, "/lib/x86_64-linux-gnu/liblzma.so.5", O_RDONLY|O_CLOEXEC) = 3
+                 8	read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\3003\0\0\0\0\0\0"..., 832) = 832
+                 9	openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libbz2.so.1.0", O_RDONLY|O_CLOEXEC) = 3
+                10	read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0@\"\0\0\0\0\0\0"..., 832) = 832
+                11	openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
+                12	read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200\"\0\0\0\0\0\0"..., 832) = 832
+                13	openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
+                14	read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\201\0\0\0\0\0\0"..., 832) = 832
+                15	openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
+                16	openat(AT_FDCWD, "/etc/magic.mgc", O_RDONLY) = -1 ENOENT (No such file or directory)
+                17	openat(AT_FDCWD, "/etc/magic", O_RDONLY) = 3
+                18	read(3, "# Magic local data for file(1) c"..., 4096) = 111
+                19	read(3, "", 4096)                       = 0
+                20	openat(AT_FDCWD, "/usr/share/misc/magic.mgc", O_RDONLY) = 3
+                21	openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache", O_RDONLY) = 3
+                22	write(1, "/dev/tty: character special (5/0"..., 34/dev/tty: character special (5/0)
+                23	) = 34
+                24	+++ exited with 0 +++
+            vagrant@vagrant:~$ 
+        ```
     
     
 3. Предположим, приложение пишет лог в текстовый файл. Этот файл оказался удален (deleted в lsof), однако возможности сигналом сказать приложению переоткрыть файлы или просто перезапустить приложение – нет. Так как приложение продолжает писать в удаленный файл, место на диске постепенно заканчивается. Основываясь на знаниях о перенаправлении потоков предложите способ обнуления открытого удаленного файла (чтобы освободить место на файловой системе).
