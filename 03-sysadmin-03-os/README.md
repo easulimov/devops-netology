@@ -166,4 +166,78 @@
     * Режим удобен именно для работы со скриптами, особенно во время их тестирования. В режиме отладки будет подробный вывод в терминал всех команд сценария. При любой опечатке, неверном имени переменной или ошибке (даже в случае появления скрытой ошибки, при передачи через pipe) будет выполнен выход из сценария.  
 9. Используя `-o stat` для `ps`, определите, какой наиболее часто встречающийся статус у процессов в системе. В `man ps` ознакомьтесь (`/PROCESS STATE CODES`) что значат дополнительные к основной заглавной буквы статуса процессов. Его можно не учитывать при расчете (считать S, Ss или Ssl равнозначными).
     ### Решение:
+    * Подготовим скрипт с именем `proc_script`:
+    ```
+        #!/bin/bash
+        
+        sleeping=0
+        running=0
+        dumped=0
+        idle=0
+        T_stopped=0
+        t_stopped=0
+        zombie=0
+        if [[ -n "$1" ]]
+        then
+            for var in "$@"
+            do
+              if [[ "$var" =~ ^S[^T]*$ ]]
+              then
+                      ((sleeping+=1))
+              fi
+
+              if [[ "$var" =~ ^R ]]
+              then
+                      ((running+=1))
+              fi
+
+              if [[ "$var" =~ ^D ]]
+              then
+                      ((dumped+=1))
+              fi
+
+              if [[ "$var" =~ ^I ]]
+              then
+                      ((idle+=1))
+              fi
+
+              if [[ "$var" =~ ^Z ]]
+              then
+                      ((zombie+=1))
+              fi
+
+              if [[ "$var" =~ ^T ]]
+              then
+                      ((T_stopped+=1))
+              fi
+              
+              if [[ "$var" =~ ^t ]]
+              then
+                      ((t_stopped+=1))
+              fi
+            done
+         fi
+         echo -e "Running $running"
+         echo -e "Sleeping $sleeping"
+         echo -e "Uninterruptible sleep $dumped"
+         echo -e "Idle $idle"
+         echo -e "Stoped by job control signal $T_stopped"
+         echo -e "Stopped by debugger during the tracing $t_stopped"
+         echo -e "Zombie $zombie"
+
+    ```
+    * Подсчитаем количество процессов c помощью подготовленного скрипта:
+      ``` 
+         vagrant@vagrant:~$ ./proc_script $(ps -eo stat)
+         Running 1
+         Sleeping 51
+         Uninterruptible sleep 0
+         Idle 48
+         Stoped by job control signal 0
+         Stopped by debugger during the tracing 0
+         Zombie 0
+         vagrant@vagrant:~$ 
+      ```
+    * Наиболее часто встречается статус `S`
+    
  
