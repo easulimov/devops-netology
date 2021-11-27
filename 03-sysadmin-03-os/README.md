@@ -63,7 +63,7 @@
            lsof: status error on /home/vagrant/.test.txt.swp: No such file or directory
            ...
        ```
-     * Чтобы обнулить файл можно выполнить команду `echo " " > /proc/4742/fd/4`
+     * Чтобы "обнулить" файл, можно выполнить команду `echo " " > /proc/4742/fd/4`
        ```       
           vagrant@vagrant:~$ lsof -nP | grep '(deleted)'
           vim       4742                       vagrant    4u      REG              253,0        2     131094 /home/vagrant/.test.txt.swp (deleted)
@@ -106,6 +106,25 @@
     
 6. Какой системный вызов использует `uname -a`? Приведите цитату из man по этому системному вызову, где описывается альтернативное местоположение в `/proc`, где можно узнать версию ядра и релиз ОС.
     ### Решение:
+    * `strace uname -a`
+    ```
+        vagrant@vagrant:~$ strace uname -a
+        execve("/usr/bin/uname", ["uname", "-a"], 0x7ffedcdd2178 /* 24 vars */) = 0
+        ...
+        close(3)                                = 0
+        uname({sysname="Linux", nodename="vagrant", ...}) = 0
+        fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}) = 0
+        uname({sysname="Linux", nodename="vagrant", ...}) = 0
+        uname({sysname="Linux", nodename="vagrant", ...}) = 0
+        write(1, "Linux vagrant 5.4.0-80-generic #"..., 105Linux vagrant 5.4.0-80-generic #90-Ubuntu SMP Fri Jul 9 22:49:44 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux) = 105
+        close(1)                                = 0
+        close(2)                                = 0
+        exit_group(0)                           = ?
+        +++ exited with 0 +++
+        vagrant@vagrant:~$ 
+    ```
+    * `man 2 uname`
+    >> Part of the utsname information is also accessible via /proc/sys/kernel/{ostype, hostname, osrelease, version, domainname}.
 
 7. Чем отличается последовательность команд через `;` и через `&&` в bash? Например:
     ```bash
