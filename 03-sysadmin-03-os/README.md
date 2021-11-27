@@ -82,7 +82,27 @@
     /usr/sbin/opensnoop-bpfcc
     ```
     На какие файлы вы увидели вызовы группы `open` за первую секунду работы утилиты? Воспользуйтесь пакетом `bpfcc-tools` для Ubuntu 20.04. Дополнительные [сведения по установке](https://github.com/iovisor/bcc/blob/master/INSTALL.md).
-    ### Решение:    
+    ### Решение: 
+    * opensnoop отслеживает системный вызов open () в масштабе всей системы и выводит различные детали:
+    ```
+       vagrant@vagrant:~$ sudo opensnoop-bpfcc 
+       PID    COMM               FD ERR PATH
+       608    irqbalance          6   0 /proc/interrupts
+       608    irqbalance          6   0 /proc/stat
+       608    irqbalance          6   0 /proc/irq/20/smp_affinity
+       608    irqbalance          6   0 /proc/irq/0/smp_affinity
+       608    irqbalance          6   0 /proc/irq/1/smp_affinity
+       608    irqbalance          6   0 /proc/irq/8/smp_affinity
+       608    irqbalance          6   0 /proc/irq/12/smp_affinity
+       608    irqbalance          6   0 /proc/irq/14/smp_affinity
+       608    irqbalance          6   0 /proc/irq/15/smp_affinity
+       786    vminfo              6   0 /var/run/utmp
+       586    dbus-daemon        -1   2 /usr/local/share/dbus-1/system-services
+       586    dbus-daemon        18   0 /usr/share/dbus-1/system-services
+       586    dbus-daemon        -1   2 /lib/dbus-1/system-services
+       586    dbus-daemon        18   0 /var/lib/snapd/dbus-1/system-services/
+       ^Cvagrant@vagrant:~$ 
+     ```
     
 6. Какой системный вызов использует `uname -a`? Приведите цитату из man по этому системному вызову, где описывается альтернативное местоположение в `/proc`, где можно узнать версию ядра и релиз ОС.
     ### Решение:
