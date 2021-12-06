@@ -6,9 +6,11 @@
     * удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
 
     ### Решение:
-    * Предварительно создадим пользователя, от имени которого будет запускаться node-exporter: `useradd --no-create-home --shell /bin/false node_exporter`
-      
-    * Скачиваем `node-exporter` c помощью команды `wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz`
+    * Предварительно создадим пользователя, от имени которого будет запускаться node-exporter: `useradd --no-create-home --shell /bin/false node_exporter`   
+    * Скачиваем `node-exporter` c помощью команды:
+    ```
+            `wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz`
+    ```
     * Распаковываем содержимое архива: `tar -xvf node_exporter-1.3.1.linux-amd64.tar.gz`
     
     ```
