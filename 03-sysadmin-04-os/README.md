@@ -107,8 +107,45 @@
     
     ```
 2. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
-### Решение:
+    ### Решение:
+    * ` curl http://localhost:9100/metrics | less`
+    * CPU
+    ```
+        node_cpu_seconds_total{cpu="0",mode="system"} 2.67
+        node_cpu_seconds_total{cpu="0",mode="user"} 1.35 
+        node_cpu_seconds_total{cpu="0",mode="idle"} 3347.64
+        node_cpu_seconds_total{cpu="0",mode="iowait"} 1.76
+        node_cpu_seconds_total{cpu="0",mode="irq"} 0
+        node_cpu_seconds_total{cpu="0",mode="nice"} 0
+        node_cpu_seconds_total{cpu="0",mode="softirq"} 0.26
+        node_cpu_seconds_total{cpu="0",mode="steal"} 0
 
+    ```
+    * RAM
+    ```
+        node_memory_MemTotal_bytes 2.08408576e+09
+        node_memory_MemFree_bytes 1.463975936e+09
+        node_memory_Cached_bytes 4.49765376e+08
+        node_memory_Buffers_bytes 2.4420352e+07
+        node_memory_MemAvailable_bytes 1.815252992e+09       
+    ```
+    * Disk
+    ```
+        node_filesystem_size_bytes{device="/dev/mapper/vgvagrant-root",fstype="ext4",mountpoint="/"} 6.5827115008e+10
+        node_filesystem_avail_bytes{device="/dev/mapper/vgvagrant-root",fstype="ext4",mountpoint="/"} 6.0401176576e+10
+        node_filesystem_files{device="/dev/mapper/vgvagrant-root",fstype="ext4",mountpoint="/"} 4.104192e+06
+        node_filesystem_device_error{device="/dev/mapper/vgvagrant-root",fstype="ext4",mountpoint="/"} 0
+        node_disk_io_time_seconds_total{device="dm-0"} 5.836
+        node_disk_io_time_seconds_total{device="dm-1"} 0.04
+        node_disk_io_time_seconds_total{device="sda"} 5.908
+    ```
+    * Network
+    ```
+        node_network_receive_bytes_total{device="eth0"} 131820
+        node_network_receive_errs_total{device="eth0"} 0
+        node_network_transmit_bytes_total{device="eth0"} 308022
+        node_network_transmit_errs_total{device="eth0"} 0
+    ```
 3. Установите в свою виртуальную машину [Netdata](https://github.com/netdata/netdata). Воспользуйтесь [готовыми пакетами](https://packagecloud.io/netdata/netdata/install) для установки (`sudo apt install -y netdata`). После успешной установки:
     * в конфигурационном файле `/etc/netdata/netdata.conf` в секции [web] замените значение с localhost на `bind to = 0.0.0.0`,
     * добавьте в Vagrantfile проброс порта Netdata на свой локальный компьютер и сделайте `vagrant reload`:
