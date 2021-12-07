@@ -162,13 +162,14 @@
   ### Решение:
   * С помощью команды `sudo dmesg -H` можно увидеть:
   ```
+      [  +0.000000] DMI: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
       [  +0.000000] Hypervisor detected: KVM
       ...
       [  +0.000000] Booting paravirtualized kernel on KVM
       ...
       [  +0.000019] systemd[1]: Detected virtualization oracle.
   ```
-  * Проверяем командой `hostnamectl | nl`. Обращаем внимание на строчку №6:
+  * Запустим команду `hostnamectl | nl`. Обращаем внимание на строчку №6:
   ```
       vagrant@vagrant:~$ hostnamectl | nl
           1	   Static hostname: vagrant
@@ -181,6 +182,21 @@
           8	            Kernel: Linux 5.4.0-80-generic
           9	      Architecture: x86-64
       vagrant@vagrant:~$ 
+  ```
+  * Запустим еще одну команду `sudo lshw -c system | nl`. Обратим внимание на строчки № 3 и 4:
+  ```
+        vagrant@vagrant:~$ sudo lshw -c system | nl
+             1  vagrant             
+             2	    description: Computer
+             3	    product: VirtualBox
+             4	    vendor: innotek GmbH
+             5	    version: 1.2
+             6	    serial: 0
+             7	    width: 64 bits
+             8	    capabilities: smbios-2.5 dmi-2.5 smp vsyscall32
+             9	    configuration: family=Virtual Machine uuid=7AC6667F-D9A1-F440-8027-7961D6B8451A
+        vagrant@vagrant:~$ 
+  
   ```
   * Делаем вывод, что операционная система осознает, что она загружена на вирутальном оборудовании.
 
