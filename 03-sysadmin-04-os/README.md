@@ -58,30 +58,48 @@
     ```
     * Вывод команды сатус после перезагрузки:
     ```
+        vagrant@vagrant:~$ sudo reboot
+        Connection to 127.0.0.1 closed by remote host.
+        Connection to 127.0.0.1 closed.
+        MacBook-Pro-admin:vagrant admin$ vagrant ssh
+        Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-80-generic x86_64)
+        
+         * Documentation:  https://help.ubuntu.com
+         * Management:     https://landscape.canonical.com
+         * Support:        https://ubuntu.com/advantage
+        
+          System information as of Tue 07 Dec 2021 10:12:05 AM UTC
+
+          System load:  0.08              Processes:             124
+          Usage of /:   3.1% of 61.31GB   Users logged in:       0
+          Memory usage: 9%                IPv4 address for eth0: 10.0.2.15
+          Swap usage:   0%
+                
+        
         This system is built by the Bento project by Chef Software
         More information can be found at https://github.com/chef/bento
-        Last login: Mon Dec  6 14:37:09 2021 from 10.0.2.2
+        Last login: Tue Dec  7 10:10:13 2021 from 10.0.2.2
         vagrant@vagrant:~$ sudo systemctl status node_exporter 
         ● node_exporter.service - Node Exporter
-             Loaded: loaded (/etc/systemd/system/node_exporter.service; enabled; vendor preset>
-             Active: active (running) since Tue 2021-11-23 18:25:01 UTC; 1 weeks 6 days ago
-           Main PID: 714 (node_exporter)
-              Tasks: 5 (limit: 2279)
-             Memory: 13.3M
+             Loaded: loaded (/etc/systemd/system/node_exporter.service; enabled; vendor preset: enabled)
+             Active: active (running) since Tue 2021-11-23 18:36:07 UTC; 1 weeks 6 days ago
+           Main PID: 709 (node_exporter)
+              Tasks: 4 (limit: 2279)
+             Memory: 13.4M
              CGroup: /system.slice/node_exporter.service
-                     └─714 /usr/local/bin/node_exporter
+                     └─709 /usr/local/bin/node_exporter
         
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.227Z caller=node_ex>
-        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.227Z caller=tls_con>
-        lines 1-19/19 (END)
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:115 level=info collector=thermal_zone
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:115 level=info collector=time
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:115 level=info collector=timex
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:115 level=info collector=udp_queues
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:115 level=info collector=uname
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:115 level=info collector=vmstat
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:115 level=info collector=xfs
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:115 level=info collector=zfs
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=node_exporter.go:199 level=info msg="Listening on" address=:9100
+        Nov 23 18:36:07 vagrant node_exporter[709]: ts=2021-11-23T18:36:07.349Z caller=tls_config.go:195 level=info msg="TLS is disabled." http2=false
+        vagrant@vagrant:~$ 
     
     ```
 2. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
