@@ -23,6 +23,10 @@
         sudo cp node_exporter-1.3.1.linux-amd64/node_exporter /usr/local/bin/node_exporter
         sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
     ```
+    * Создадим конфигурационный файл, для возможности добавления опций к запускаемому процессу в будущем. Список опций можно посмотреть `node_exporter --help`: 
+    ```
+        sudo bash -c "echo "OPTIONS=\'\'" > /etc/default/node_exporter.conf"    
+    ```
     * Cоздадим новый unit-файл для `node-exporter`: 
     ```
         sudo vim /etc/systemd/system/node_exporter.service
@@ -37,8 +41,8 @@
         User=node_exporter
         Group=node_exporter
         Type=simple
-        ExecStart=/usr/local/bin/node_exporter
-        ExecReload=/bin/kill -HUP $MAINPID
+        EnvironmentFile=-/etc/default/node_exporter.conf
+        ExecStart=/usr/local/bin/node_exporter $OPTIONS
         Restart=on-failure
 
         [Install]
