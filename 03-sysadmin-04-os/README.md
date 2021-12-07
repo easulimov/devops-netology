@@ -6,17 +6,84 @@
     * удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
 
     ### Решение:
-    * Предварительно создадим пользователя, от имени которого будет запускаться node-exporter: `useradd --no-create-home --shell /bin/false node_exporter`   
+    * Предварительно создадим пользователя, от имени которого будет запускаться node-exporter: 
+    ```
+        sudo useradd --no-create-home --shell /bin/false node_exporter
+    ```
     * Скачиваем `node-exporter` c помощью команды:
     ```
-            `wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz`
+        wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
     ```
-    * Распаковываем содержимое архива: `tar -xvf node_exporter-1.3.1.linux-amd64.tar.gz`
+    * Распаковываем содержимое архива: 
+    ```
+        tar -xvf node_exporter-1.3.1.linux-amd64.tar.gz
+    ```
+    * Скопируем исполняемый файл в `/usr/local/bin` и изменим владельца и группу владельца на ранее созданного `node_exporter`: 
+    ```
+        sudo cp node_exporter-1.3.1.linux-amd64/node_exporter /usr/local/bin/node_exporter
+        sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
+    ```
+    * Cоздадим новый unit-файл для `node-exporter`: 
+    ```
+        sudo vim /etc/systemd/system/node_exporter.service
+    ```
+    ```
+        [Unit]
+        Description=Node Exporter
+        Wants=network-online.target
+        After=network-online.target
+        
+        [Service]
+        User=node_exporter
+        Group=node_exporter
+        Type=simple
+        ExecStart=/usr/local/bin/node_exporter
+        ExecReload=/bin/kill -HUP $MAINPID
+        Restart=on-failure
+
+        [Install]
+        WantedBy=multi-user.target
+    ```
+    * Перечитаем конфигурацию `systemd`, а также запустим наш новый юнит и добавим его в автозагрузку: 
+    ```
+        sudo systemctl daemon-reload
+        sudo systemctl start node_exporter
+        sudo systemctl enable node_exporter
+    ```
+    * Перезагрузим виртуальную машину и проверим статус юнита `node_exporter`:
+    ```
+        sudo reboot
+        vagrant ssh
+        sudo systemctl status node_exporter 
+    ```
+    * Вывод команды сатус после перезагрузки:
+    ```
+        This system is built by the Bento project by Chef Software
+        More information can be found at https://github.com/chef/bento
+        Last login: Mon Dec  6 14:37:09 2021 from 10.0.2.2
+        vagrant@vagrant:~$ sudo systemctl status node_exporter 
+        ● node_exporter.service - Node Exporter
+             Loaded: loaded (/etc/systemd/system/node_exporter.service; enabled; vendor preset>
+             Active: active (running) since Tue 2021-11-23 18:25:01 UTC; 1 weeks 6 days ago
+           Main PID: 714 (node_exporter)
+              Tasks: 5 (limit: 2279)
+             Memory: 13.3M
+             CGroup: /system.slice/node_exporter.service
+                     └─714 /usr/local/bin/node_exporter
+        
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.226Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.227Z caller=node_ex>
+        Nov 23 18:25:01 vagrant node_exporter[714]: ts=2021-11-23T18:25:01.227Z caller=tls_con>
+        lines 1-19/19 (END)
     
     ```
-       
-    ```
-
 2. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 ### Решение:
 
