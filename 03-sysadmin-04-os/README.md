@@ -253,4 +253,34 @@
      [Wed Dec  8 16:47:31 2021] cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-5.scope
      [Wed Dec  8 16:47:40 2021] cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-3.scope 
   ```
-  * 
+  * По умолчанию этот механизм настроен на ограничение максимального количества запучкаемых пользователем процессов.
+  * Можно изменить например в меньшую сторону `ulimit -Su 100`
+  * Либо задать конкретное значение в файле `/etc/security/limits.conf `. Например, изменим количество открываемых файлов и максимальное количество процессов:
+  ```
+     vagrant@vagrant:~$ sudo vim /etc/security/limits.conf 
+     ...
+     vagrant soft nproc 10000
+     vagrant hard nproc 10000
+     vagrant soft nofile 10000
+     vagrant soft nofile 10000
+     ...
+     vagrant@vagrant:~$ su - vagrant
+     Password: 
+     vagrant@vagrant:~$ ulimit -a
+     core file size          (blocks, -c) 0
+     data seg size           (kbytes, -d) unlimited
+     scheduling priority             (-e) 0
+     file size               (blocks, -f) unlimited
+     pending signals                 (-i) 7597
+     max locked memory       (kbytes, -l) 65536
+     max memory size         (kbytes, -m) unlimited
+     open files                      (-n) 10000
+     pipe size            (512 bytes, -p) 8
+     POSIX message queues     (bytes, -q) 819200
+     real-time priority              (-r) 0
+     stack size              (kbytes, -s) 8192
+     cpu time               (seconds, -t) unlimited
+     max user processes              (-u) 10000
+     virtual memory          (kbytes, -v) unlimited
+     file locks                      (-x) unlimited
+  ```
