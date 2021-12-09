@@ -220,6 +220,17 @@
    ```
 8. Создайте 2 независимых PV на получившихся md-устройствах.
    ### Решение
+   ```
+      vagrant@vagrant:~$ sudo pvcreate /dev/md0 /dev/md1
+        Physical volume "/dev/md0" successfully created.
+        Physical volume "/dev/md1" successfully created.
+      vagrant@vagrant:~$ sudo pvs
+        PV         VG        Fmt  Attr PSize    PFree   
+        /dev/md0             lvm2 ---    <2.00g   <2.00g
+        /dev/md1             lvm2 ---  1020.00m 1020.00m
+        /dev/sda5  vgvagrant lvm2 a--   <63.50g       0 
+      vagrant@vagrant:~$ 
+   ```
    
 9. Создайте общую volume-group на этих двух PV.
    ### Решение
