@@ -51,6 +51,10 @@
     ```
 
     Данная конфигурация создаст новую виртуальную машину с двумя дополнительными неразмеченными дисками по 2.5 Гб.
+    ### Решение:
+    * Выполнено.
+
+4. Используя `fdisk`, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.
    ### Решение
    ```
       vagrant@vagrant:~$ lsblk
@@ -80,14 +84,27 @@
       /dev/sdb1          2048 1050623 1048576  512M 83 Linux
       /dev/sdb2       1050624 5242879 4192256    2G 83 Linux
       
-      Command (m for help): q
+      Command (m for help): w
+      The partition table has been altered.
+      Calling ioctl() to re-read partition table.
+      Syncing disks.
       
+      vagrant@vagrant:~$ 
+      vagrant@vagrant:~$ lsblk
+      NAME                 MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+      sda                    8:0    0   64G  0 disk 
+      ├─sda1                 8:1    0  512M  0 part /boot/efi
+      ├─sda2                 8:2    0    1K  0 part 
+      └─sda5                 8:5    0 63.5G  0 part 
+        ├─vgvagrant-root   253:0    0 62.6G  0 lvm  /
+        └─vgvagrant-swap_1 253:1    0  980M  0 lvm  [SWAP]
+      sdb                    8:16   0  2.5G  0 disk 
+      ├─sdb1                 8:17   0  512M  0 part 
+      └─sdb2                 8:18   0    2G  0 part 
+      sdc                    8:32   0  2.5G  0 disk 
       vagrant@vagrant:~$ 
    
    ```
-
-4. Используя `fdisk`, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.
-   ### Решение
    
 5. Используя `sfdisk`, перенесите данную таблицу разделов на второй диск.
    ### Решение
