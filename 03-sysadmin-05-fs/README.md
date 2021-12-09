@@ -108,6 +108,54 @@
    
 5. Используя `sfdisk`, перенесите данную таблицу разделов на второй диск.
    ### Решение
+   ```
+   
+      vagrant@vagrant:~$ sudo bash -c "sfdisk -d /dev/sdb | sfdisk /dev/sdc"
+      Checking that no-one is using this disk right now ... OK
+      
+      Disk /dev/sdc: 2.51 GiB, 2684354560 bytes, 5242880 sectors
+      Disk model: VBOX HARDDISK   
+      Units: sectors of 1 * 512 = 512 bytes
+      Sector size (logical/physical): 512 bytes / 512 bytes
+      I/O size (minimum/optimal): 512 bytes / 512 bytes
+      
+      >>> Script header accepted.
+      >>> Script header accepted.
+      >>> Script header accepted.
+      >>> Script header accepted.
+      >>> Created a new DOS disklabel with disk identifier 0x238715f1.
+      /dev/sdc1: Created a new partition 1 of type 'Linux' and of size 512 MiB.
+      /dev/sdc2: Created a new partition 2 of type 'Linux' and of size 2 GiB.
+      /dev/sdc3: Done.
+      
+      New situation:
+      Disklabel type: dos
+      Disk identifier: 0x238715f1
+      
+      Device     Boot   Start     End Sectors  Size Id Type
+      /dev/sdc1          2048 1050623 1048576  512M 83 Linux
+      /dev/sdc2       1050624 5242879 4192256    2G 83 Linux
+
+      The partition table has been altered.
+      Calling ioctl() to re-read partition table.
+      Syncing disks.
+      vagrant@vagrant:~$ lsblk
+      NAME                 MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+      sda                    8:0    0   64G  0 disk 
+      ├─sda1                 8:1    0  512M  0 part /boot/efi
+      ├─sda2                 8:2    0    1K  0 part 
+      └─sda5                 8:5    0 63.5G  0 part 
+        ├─vgvagrant-root   253:0    0 62.6G  0 lvm  /
+        └─vgvagrant-swap_1 253:1    0  980M  0 lvm  [SWAP]
+      sdb                    8:16   0  2.5G  0 disk 
+      ├─sdb1                 8:17   0  512M  0 part 
+      └─sdb2                 8:18   0    2G  0 part 
+      sdc                    8:32   0  2.5G  0 disk 
+      ├─sdc1                 8:33   0  512M  0 part 
+      └─sdc2                 8:34   0    2G  0 part 
+      vagrant@vagrant:~$ sudo sfdisk -d /dev/sdc | less
+      vagrant@vagrant:~$ 
+   ```
    
 6. Соберите `mdadm` RAID1 на паре разделов 2 Гб.
    ### Решение
