@@ -52,6 +52,39 @@
 
     Данная конфигурация создаст новую виртуальную машину с двумя дополнительными неразмеченными дисками по 2.5 Гб.
    ### Решение
+   ```
+      vagrant@vagrant:~$ lsblk
+      NAME                 MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+      sda                    8:0    0   64G  0 disk 
+      ├─sda1                 8:1    0  512M  0 part /boot/efi
+      ├─sda2                 8:2    0    1K  0 part 
+      └─sda5                 8:5    0 63.5G  0 part 
+        ├─vgvagrant-root   253:0    0 62.6G  0 lvm  /
+        └─vgvagrant-swap_1 253:1    0  980M  0 lvm  [SWAP]
+      sdb                    8:16   0  2.5G  0 disk 
+      sdc                    8:32   0  2.5G  0 disk 
+      vagrant@vagrant:~$ 
+      vagrant@vagrant:~$ sudo fdisk /dev/sdb
+      ...
+      Command (m for help): p
+      
+      Disk /dev/sdb: 2.51 GiB, 2684354560 bytes, 5242880 sectors
+      Disk model: VBOX HARDDISK   
+      Units: sectors of 1 * 512 = 512 bytes
+      Sector size (logical/physical): 512 bytes / 512 bytes
+      I/O size (minimum/optimal): 512 bytes / 512 bytes
+      Disklabel type: dos
+      Disk identifier: 0x33b67015
+      
+      Device     Boot   Start     End Sectors  Size Id Type
+      /dev/sdb1          2048 1050623 1048576  512M 83 Linux
+      /dev/sdb2       1050624 5242879 4192256    2G 83 Linux
+      
+      Command (m for help): q
+      
+      vagrant@vagrant:~$ 
+   
+   ```
 
 4. Используя `fdisk`, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.
    ### Решение
