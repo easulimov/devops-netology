@@ -1,8 +1,40 @@
 1. Узнайте о [sparse](https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D0%B7%D1%80%D0%B5%D0%B6%D1%91%D0%BD%D0%BD%D1%8B%D0%B9_%D1%84%D0%B0%D0%B9%D0%BB) (разряженных) файлах.
    ### Решение
+   * Выполнено.
 
 2. Могут ли файлы, являющиеся жесткой ссылкой на один объект, иметь разные права доступа и владельца? Почему?
    ### Решение
+   * Файлы, являющиеся жесткой ссылкой на один объект не могут иметь разные права доступа и владельца, так как они ссылаются на один и тот же индексный дескриптор:
+   ```
+       vagrant@vagrant:~$ echo "Hello world!" > file1
+       vagrant@vagrant:~$ ln file1 file2
+       vagrant@vagrant:~$ stat file1
+         File: file1
+         Size: 13        	Blocks: 8          IO Block: 4096   regular file
+       Device: fd00h/64768d	Inode: 131121      Links: 2
+       Access: (0664/-rw-rw-r--)  Uid: ( 1000/ vagrant)   Gid: ( 1000/ vagrant)
+       Access: 2021-12-09 14:56:52.713837684 +0000
+       Modify: 2021-12-09 14:56:52.713837684 +0000
+       Change: 2021-12-09 14:57:02.138547556 +0000
+        Birth: -
+       vagrant@vagrant:~$ stat file2
+         File: file2
+         Size: 13        	Blocks: 8          IO Block: 4096   regular file
+       Device: fd00h/64768d	Inode: 131121      Links: 2
+       Access: (0664/-rw-rw-r--)  Uid: ( 1000/ vagrant)   Gid: ( 1000/ vagrant)
+       Access: 2021-12-09 14:56:52.713837684 +0000
+       Modify: 2021-12-09 14:56:52.713837684 +0000
+       Change: 2021-12-09 14:57:02.138547556 +0000
+        Birth: -
+       vagrant@vagrant:~$ ls -lahF file*
+       -rw-rw-r-- 2 vagrant vagrant 13 Dec  9 14:56 file1
+       -rw-rw-r-- 2 vagrant vagrant 13 Dec  9 14:56 file2
+       vagrant@vagrant:~$ chmod o-r file2
+       vagrant@vagrant:~$ ls -lahF file*
+       -rw-rw---- 2 vagrant vagrant 13 Dec  9 14:56 file1
+       -rw-rw---- 2 vagrant vagrant 13 Dec  9 14:56 file2
+       vagrant@vagrant:~$ 
+   ```
 3. Сделайте `vagrant destroy` на имеющийся инстанс Ubuntu. Замените содержимое Vagrantfile следующим:
     ```bash
     Vagrant.configure("2") do |config|
