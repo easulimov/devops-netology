@@ -234,15 +234,64 @@
    
 9. Создайте общую volume-group на этих двух PV.
    ### Решение
+   ```
+      vagrant@vagrant:~$ sudo vgcreate vg1_misc /dev/md0 /dev/md1
+      Volume group "vg1_misc" successfully created
+      vagrant@vagrant:~$ sudo vgs
+      VG        #PV #LV #SN Attr   VSize   VFree 
+      vg1_misc    2   0   0 wz--n-  <2.99g <2.99g
+      vgvagrant   1   2   0 wz--n- <63.50g     0 
+      vagrant@vagrant:~$ sudo pvs
+      PV         VG        Fmt  Attr PSize    PFree   
+      /dev/md0   vg1_misc  lvm2 a--    <2.00g   <2.00g
+      /dev/md1   vg1_misc  lvm2 a--  1016.00m 1016.00m
+      /dev/sda5  vgvagrant lvm2 a--   <63.50g       0 
+      vagrant@vagrant:~$ 
+  ```
    
 10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.
-   ### Решение
+    ### Решение
+    ```
+    
+        vagrant@vagrant:~$ sudo lvcreate -L 100M -n lv_on_raid0 vg1_misc /dev/md1
+        Logical volume "lv_on_raid0" created.
+        vagrant@vagrant:~$ sudo  lvs -a -o +devices
+         LV          VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert Devices         
+         lv_on_raid0 vg1_misc  -wi-a----- 100.00m                                                     /dev/md1(0)     
+         root        vgvagrant -wi-ao---- <62.54g                                                     /dev/sda5(0)    
+         swap_1      vgvagrant -wi-ao---- 980.00m                                                     /dev/sda5(16010)
+        vagrant@vagrant:~$
+       
+    ```
    
 11. Создайте `mkfs.ext4` ФС на получившемся LV.
-   ### Решение
+    ### Решение
+    ```
+       vagrant@vagrant:~$ sudo mkfs.ext4 /dev/vg1_misc/lv_on_raid0 
+       mke2fs 1.45.5 (07-Jan-2020)
+       Creating filesystem with 25600 4k blocks and 25600 inodes
+       
+       Allocating group tables: done                            
+       Writing inode tables: done                            
+       Creating journal (1024 blocks): done
+       Writing superblocks and filesystem accounting information: done
+       
+       vagrant@vagrant:~$   
+   ```
    
 12. Смонтируйте этот раздел в любую директорию, например, `/tmp/new`.
    ### Решение
+   ```
+      vagrant@vagrant:~$ mkdir -p /tmp/new
+      vagrant@vagrant:~$ sudo mount /dev/mapper/vg1_misc-lv_on_raid0 /tmp/new
+      vagrant@vagrant:~$ findmnt
+      TARGET                                SOURCE                           FSTYPE     OPTIONS
+      /                                     /dev/mapper/vgvagrant-root       ext4       rw,relatime,errors=remount-ro
+      ├─/sys                                sysfs                            sysfs      rw,nosuid,nodev,noexec,relatime
+      ...
+      └─/tmp/new                            /dev/mapper/vg1_misc-lv_on_raid0 ext4       rw,relatime,stripe=256
+
+   ```
    
 13. Поместите туда тестовый файл, например `wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz`.
    ### Решение
