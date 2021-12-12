@@ -247,12 +247,11 @@
       /dev/md1   vg1_misc  lvm2 a--  1016.00m 1016.00m
       /dev/sda5  vgvagrant lvm2 a--   <63.50g       0 
       vagrant@vagrant:~$ 
-  ```
+   ```
    
 10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.
     ### Решение
     ```
-    
         vagrant@vagrant:~$ sudo lvcreate -L 100M -n lv_on_raid0 vg1_misc /dev/md1
         Logical volume "lv_on_raid0" created.
         vagrant@vagrant:~$ sudo  lvs -a -o +devices
@@ -261,7 +260,7 @@
          root        vgvagrant -wi-ao---- <62.54g                                                     /dev/sda5(0)    
          swap_1      vgvagrant -wi-ao---- 980.00m                                                     /dev/sda5(16010)
         vagrant@vagrant:~$
-       
+        
     ```
    
 11. Создайте `mkfs.ext4` ФС на получившемся LV.
@@ -277,7 +276,8 @@
        Writing superblocks and filesystem accounting information: done
        
        vagrant@vagrant:~$   
-   ```
+       
+     ```
    
 12. Смонтируйте этот раздел в любую директорию, например, `/tmp/new`.
    ### Решение
