@@ -52,7 +52,23 @@
 
     Данная конфигурация создаст новую виртуальную машину с двумя дополнительными неразмеченными дисками по 2.5 Гб.
     ### Решение:
-    * Выполнено.
+    * Выполнено. Немного изменил `Vagrantfile` для своего MacBook:
+    ```
+       Vagrant.configure("2") do |config|
+         config.vm.box = "bento/ubuntu-20.04"
+         config.vm.provider :virtualbox do |vb|
+           vb.gui = true
+           vb.name = "ub01"
+           vb.memory = 2048
+           lvm_experiments_disk0_path = "/tmp/lvm_experiments_disk0.vmdk"
+           lvm_experiments_disk1_path = "/tmp/lvm_experiments_disk1.vmdk"
+           vb.customize ['createmedium', '--filename', lvm_experiments_disk0_path, '--size', 2560]
+           vb.customize ['createmedium', '--filename', lvm_experiments_disk1_path, '--size', 2560]
+           vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', lvm_experiments_disk0_path]
+           vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', lvm_experiments_disk1_path]
+         end
+       end
+    ```
 
 4. Используя `fdisk`, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.
    ### Решение
