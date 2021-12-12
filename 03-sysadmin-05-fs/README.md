@@ -295,9 +295,54 @@
    
 13. Поместите туда тестовый файл, например `wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz`.
    ### Решение
+   ```
+       vagrant@vagrant:~$ cd /tmp/new/
+       vagrant@vagrant:/tmp/new$ sudo wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz
+       --2021-12-12 08:18:18--  https://mirror.yandex.ru/ubuntu/ls-lR.gz
+       Resolving mirror.yandex.ru (mirror.yandex.ru)... 213.180.204.183, 2a02:6b8::183
+       Connecting to mirror.yandex.ru (mirror.yandex.ru)|213.180.204.183|:443... connected.
+       HTTP request sent, awaiting response... 200 OK
+       Length: 22718197 (22M) [application/octet-stream]
+       Saving to: ‘/tmp/new/test.gz’
+       
+       /tmp/new/test.gz                               100%[=================================================================================================>]  21.67M  5.94MB/s    in 3.6s    
+       
+       2021-12-12 08:18:21 (6.10 MB/s) - ‘/tmp/new/test.gz’ saved [22718197/22718197]
+
+       vagrant@vagrant:/tmp/new$ ll
+       total 22212
+       drwxr-xr-x  3 root root     4096 Dec 12 08:18 ./
+       drwxrwxrwt 11 root root     4096 Dec 12 08:07 ../
+       drwx------  2 root root    16384 Dec 12 08:04 lost+found/
+       -rw-r--r--  1 root root 22718197 Dec 12 04:08 test.gz
+       vagrant@vagrant:/tmp/new$ 
+   ```
    
 14. Прикрепите вывод `lsblk`.
    ### Решение
+   ```
+      vagrant@vagrant:/tmp/new$ lsblk
+      NAME                       MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+      sda                          8:0    0   64G  0 disk  
+      ├─sda1                       8:1    0  512M  0 part  /boot/efi
+      ├─sda2                       8:2    0    1K  0 part  
+      └─sda5                       8:5    0 63.5G  0 part  
+        ├─vgvagrant-root         253:0    0 62.6G  0 lvm   /
+        └─vgvagrant-swap_1       253:1    0  980M  0 lvm   [SWAP]
+      sdb                          8:16   0  2.5G  0 disk  
+      ├─sdb1                       8:17   0  512M  0 part  
+      │ └─md1                      9:1    0 1020M  0 raid0 
+      │   └─vg1_misc-lv_on_raid0 253:2    0  100M  0 lvm   /tmp/new
+      └─sdb2                       8:18   0    2G  0 part  
+        └─md0                      9:0    0    2G  0 raid1 
+      sdc                          8:32   0  2.5G  0 disk  
+      ├─sdc1                       8:33   0  512M  0 part  
+      │ └─md1                      9:1    0 1020M  0 raid0 
+      │   └─vg1_misc-lv_on_raid0 253:2    0  100M  0 lvm   /tmp/new
+      └─sdc2                       8:34   0    2G  0 part  
+        └─md0                      9:0    0    2G  0 raid1 
+      vagrant@vagrant:/tmp/new$ 
+   ```
    
 15. Протестируйте целостность файла:
 
