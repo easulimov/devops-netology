@@ -352,9 +352,67 @@
     0
     ```
    ### Решение
+   * Примечание: `$?` - это код возврата из процесса последнего запуска. 0 означает, что ошибки не произошло.
+   ```
+       vagrant@vagrant:/tmp/new$ gzip -t /tmp/new/test.gz 
+       vagrant@vagrant:/tmp/new$ echo $?
+       0
+       vagrant@vagrant:/tmp/new$ 
+   ```
    
 16. Используя pvmove, переместите содержимое PV с RAID0 на RAID1.
    ### Решение
+   ```
+      vagrant@vagrant:/tmp/new$ lsblk
+      NAME                       MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+      sda                          8:0    0   64G  0 disk  
+      ├─sda1                       8:1    0  512M  0 part  /boot/efi
+      ├─sda2                       8:2    0    1K  0 part  
+      └─sda5                       8:5    0 63.5G  0 part  
+        ├─vgvagrant-root         253:0    0 62.6G  0 lvm   /
+        └─vgvagrant-swap_1       253:1    0  980M  0 lvm   [SWAP]
+      sdb                          8:16   0  2.5G  0 disk  
+      ├─sdb1                       8:17   0  512M  0 part  
+      │ └─md1                      9:1    0 1020M  0 raid0 
+      │   └─vg1_misc-lv_on_raid0 253:2    0  100M  0 lvm   /tmp/new
+      └─sdb2                       8:18   0    2G  0 part  
+        └─md0                      9:0    0    2G  0 raid1 
+      sdc                          8:32   0  2.5G  0 disk  
+      ├─sdc1                       8:33   0  512M  0 part  
+      │ └─md1                      9:1    0 1020M  0 raid0 
+      │   └─vg1_misc-lv_on_raid0 253:2    0  100M  0 lvm   /tmp/new
+      └─sdc2                       8:34   0    2G  0 part  
+        └─md0                      9:0    0    2G  0 raid1 
+      vagrant@vagrant:/tmp/new$ sudo pvs
+        PV         VG        Fmt  Attr PSize    PFree  
+        /dev/md0   vg1_misc  lvm2 a--    <2.00g  <2.00g
+        /dev/md1   vg1_misc  lvm2 a--  1016.00m 916.00m
+        /dev/sda5  vgvagrant lvm2 a--   <63.50g      0 
+      vagrant@vagrant:/tmp/new$ sudo pvmove /dev/md1 /dev/md0
+        /dev/md1: Moved: 20.00%
+        /dev/md1: Moved: 100.00%
+      vagrant@vagrant:/tmp/new$ lsblk
+      NAME                       MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+      sda                          8:0    0   64G  0 disk  
+      ├─sda1                       8:1    0  512M  0 part  /boot/efi
+      ├─sda2                       8:2    0    1K  0 part  
+      └─sda5                       8:5    0 63.5G  0 part  
+        ├─vgvagrant-root         253:0    0 62.6G  0 lvm   /
+        └─vgvagrant-swap_1       253:1    0  980M  0 lvm   [SWAP]
+      sdb                          8:16   0  2.5G  0 disk  
+      ├─sdb1                       8:17   0  512M  0 part  
+      │ └─md1                      9:1    0 1020M  0 raid0 
+      └─sdb2                       8:18   0    2G  0 part  
+        └─md0                      9:0    0    2G  0 raid1 
+          └─vg1_misc-lv_on_raid0 253:2    0  100M  0 lvm   /tmp/new
+      sdc                          8:32   0  2.5G  0 disk  
+      ├─sdc1                       8:33   0  512M  0 part  
+      │ └─md1                      9:1    0 1020M  0 raid0 
+      └─sdc2                       8:34   0    2G  0 part  
+        └─md0                      9:0    0    2G  0 raid1 
+          └─vg1_misc-lv_on_raid0 253:2    0  100M  0 lvm   /tmp/new
+      vagrant@vagrant:/tmp/new$ 
+   ```
    
 17. Сделайте `--fail` на устройство в вашем RAID1 md.
    ### Решение
