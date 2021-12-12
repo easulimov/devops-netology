@@ -416,9 +416,77 @@
    
 17. Сделайте `--fail` на устройство в вашем RAID1 md.
    ### Решение
+   ```
+   
+       vagrant@vagrant:/tmp/new$ sudo mdadm --detail /dev/md0
+       /dev/md0:
+                  Version : 1.2
+            Creation Time : Thu Dec  9 17:13:06 2021
+               Raid Level : raid1
+               Array Size : 2094080 (2045.00 MiB 2144.34 MB)
+            Used Dev Size : 2094080 (2045.00 MiB 2144.34 MB)
+             Raid Devices : 2
+            Total Devices : 2
+              Persistence : Superblock is persistent
+       
+              Update Time : Sun Dec 12 08:48:57 2021
+                    State : clean 
+           Active Devices : 2
+          Working Devices : 2
+           Failed Devices : 0
+            Spare Devices : 0
+       
+       Consistency Policy : resync
+       
+                     Name : vagrant:0  (local to host vagrant)
+                     UUID : 09809344:734dd708:97ce4d9e:0dd4d442
+                   Events : 20
+       
+           Number   Major   Minor   RaidDevice State
+              0       8       18        0      active sync   /dev/sdb2
+              1       8       34        1      active sync   /dev/sdc2
+       vagrant@vagrant:/tmp/new$ sudo mdadm /dev/md0 --fail /dev/sdb2
+       mdadm: set /dev/sdb2 faulty in /dev/md0
+       vagrant@vagrant:/tmp/new$ sudo mdadm --detail /dev/md0
+       /dev/md0:
+                  Version : 1.2
+            Creation Time : Thu Dec  9 17:13:06 2021
+               Raid Level : raid1
+               Array Size : 2094080 (2045.00 MiB 2144.34 MB)
+            Used Dev Size : 2094080 (2045.00 MiB 2144.34 MB)
+             Raid Devices : 2
+            Total Devices : 2
+              Persistence : Superblock is persistent
+       
+              Update Time : Sun Dec 12 08:59:06 2021
+                    State : clean, degraded 
+           Active Devices : 1
+          Working Devices : 1
+           Failed Devices : 1
+            Spare Devices : 0
+       
+       Consistency Policy : resync
+       
+                     Name : vagrant:0  (local to host vagrant)
+                     UUID : 09809344:734dd708:97ce4d9e:0dd4d442
+                   Events : 22
+       
+           Number   Major   Minor   RaidDevice State
+              -       0        0        0      removed
+              1       8       34        1      active sync   /dev/sdc2
+       
+              0       8       18        -      faulty   /dev/sdb2
+       vagrant@vagrant:/tmp/new$ 
+   ```
    
 18. Подтвердите выводом `dmesg`, что RAID1 работает в деградированном состоянии.
    ### Решение
+   * `sudo dmesg -HT`
+   ```
+      [Sun Dec 12 08:08:36 2021] ext4 filesystem being mounted at /tmp/new supports timestamps until 2038 (0x7fffffff)
+      [Sun Dec 12 08:59:03 2021] md/raid1:md0: Disk failure on sdb2, disabling device.
+                           md/raid1:md0: Operation continuing on 1 devices.
+   ```
    
 19. Протестируйте целостность файла, несмотря на "сбойный" диск он должен продолжать быть доступен:
 
@@ -428,7 +496,50 @@
     0
     ```
    ### Решение
-   
+   ```
+        vagrant@vagrant:/tmp/new$ sudo mdadm --detail /dev/md0
+        /dev/md0:
+                   Version : 1.2
+             Creation Time : Thu Dec  9 17:13:06 2021
+                Raid Level : raid1
+                Array Size : 2094080 (2045.00 MiB 2144.34 MB)
+             Used Dev Size : 2094080 (2045.00 MiB 2144.34 MB)
+              Raid Devices : 2
+             Total Devices : 2
+               Persistence : Superblock is persistent
+        
+               Update Time : Sun Dec 12 08:59:06 2021
+                     State : clean, degraded 
+            Active Devices : 1
+           Working Devices : 1
+            Failed Devices : 1
+             Spare Devices : 0
+        
+        Consistency Policy : resync
+        
+                      Name : vagrant:0  (local to host vagrant)
+                      UUID : 09809344:734dd708:97ce4d9e:0dd4d442
+                    Events : 22
+        
+            Number   Major   Minor   RaidDevice State
+               -       0        0        0      removed
+               1       8       34        1      active sync   /dev/sdc2
+        
+               0       8       18        -      faulty   /dev/sdb2
+        vagrant@vagrant:/tmp/new$ gzip -t /tmp/new/test.gz 
+        vagrant@vagrant:/tmp/new$ echo $?
+        0
+        vagrant@vagrant:/tmp/new$ 
+   ```
 20. Погасите тестовый хост, `vagrant destroy`.
    ### Решение
-   
+   * Выполнено
+   ```
+      logout
+      Connection to 127.0.0.1 closed.
+      MacBook-Pro-admin:ub01 admin$ vagrant destroy
+          default: Are you sure you want to destroy the 'default' VM? [y/N] y
+      ==> default: Forcing shutdown of VM...
+      ==> default: Destroying VM and associated drives...
+      MacBook-Pro-admin:ub01 admin$ 
+   ```
