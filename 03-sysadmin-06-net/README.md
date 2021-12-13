@@ -255,5 +255,61 @@ HOST: stackoverflow.com
 
 7. Какие DNS сервера отвечают за доменное имя dns.google? Какие A записи? воспользуйтесь утилитой `dig`
  ### Решение
+ * Записи NS
+ ```
+     vagrant@vagrant:~$ dig -t NS dns.google
+     
+     ; <<>> DiG 9.16.1-Ubuntu <<>> -t NS dns.google
+     ;; global options: +cmd
+     ;; Got answer:
+     ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 25619
+     ;; flags: qr rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 1
+     
+     ;; OPT PSEUDOSECTION:
+     ; EDNS: version: 0, flags:; udp: 65494
+     ;; QUESTION SECTION:
+     ;dns.google.			IN	NS
+
+     ;; ANSWER SECTION:
+     dns.google.		2891	IN	NS	ns1.zdns.google.
+     dns.google.		2891	IN	NS	ns3.zdns.google.
+     dns.google.		2891	IN	NS	ns2.zdns.google.
+     dns.google.		2891	IN	NS	ns4.zdns.google.
+     
+     ;; Query time: 75 msec
+     ;; SERVER: 127.0.0.53#53(127.0.0.53)
+     ;; WHEN: Mon Dec 13 17:40:40 UTC 2021
+     ;; MSG SIZE  rcvd: 116
+ ```
+ 
+ * Записи А
+ 
+ ```
+     
+     vagrant@vagrant:~$ dig -t A dns.google
+     
+     ; <<>> DiG 9.16.1-Ubuntu <<>> -t A dns.google
+     ;; global options: +cmd
+     ;; Got answer:
+     ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 951
+     ;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+     
+     ;; OPT PSEUDOSECTION:
+     ; EDNS: version: 0, flags:; udp: 65494
+     ;; QUESTION SECTION:
+     ;dns.google.			IN	A
+
+     ;; ANSWER SECTION:
+     dns.google.		430	IN	A	8.8.8.8
+     dns.google.		430	IN	A	8.8.4.4
+     
+     ;; Query time: 0 msec
+     ;; SERVER: 127.0.0.53#53(127.0.0.53)
+     ;; WHEN: Mon Dec 13 17:40:47 UTC 2021
+     ;; MSG SIZE  rcvd: 71
+
+     vagrant@vagrant:~$ 
+ 
+ ```
 8. Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой `dig`
  ### Решение
