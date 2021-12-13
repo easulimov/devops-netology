@@ -52,7 +52,7 @@ HOST: stackoverflow.com
 - проверьте время загрузки страницы, какой запрос обрабатывался дольше всего?
 - приложите скриншот консоли браузера в ответ.
  ### Решение
- * Полученный HTTP код: ]Status Code: 307 Internal Redirect`
+ * Полученный HTTP код: `Status Code: 307 Internal Redirect`
  * Дольше всего обрабатывался запрос GET:
  ```
     Request URL: https://stackoverflow.com/
