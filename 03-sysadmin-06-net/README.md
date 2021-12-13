@@ -52,6 +52,18 @@ HOST: stackoverflow.com
 - проверьте время загрузки страницы, какой запрос обрабатывался дольше всего?
 - приложите скриншот консоли браузера в ответ.
  ### Решение
+ * Полученный HTTP код: ]Status Code: 307 Internal Redirect`
+ * Дольше всего обрабатывался запрос GET:
+ ```
+    Request URL: https://stackoverflow.com/
+    Request Method: GET
+    Status Code: 200 
+    Remote Address: 151.101.1.69:443
+    Referrer Policy: strict-origin-when-cross-origin
+ ```
+ * [Скриншот: Get Request Code 200 Headers](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-06-net/img/Get%20Request%20Status%20Code%20200%20.png)
+ * [Скриншот: Request Time](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-06-net/img/Get%20Request%20Time.png)
+ 
 3. Какой IP адрес у вас в интернете?
  ### Решение
 5. Какому провайдеру принадлежит ваш IP адрес? Какой автономной системе AS? Воспользуйтесь утилитой `whois`
