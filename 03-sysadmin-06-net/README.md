@@ -255,7 +255,7 @@ HOST: stackoverflow.com
 
 7. Какие DNS сервера отвечают за доменное имя dns.google? Какие A записи? воспользуйтесь утилитой `dig`
  ### Решение
- * Записи NS
+ * Записи NS (DNS сервера)
  ```
      vagrant@vagrant:~$ dig -t NS dns.google
      
