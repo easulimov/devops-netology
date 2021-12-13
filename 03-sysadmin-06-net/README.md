@@ -10,6 +10,37 @@ HOST: stackoverflow.com
 ```
 - В ответе укажите полученный HTTP код, что он означает?
  ### Решение
+ * Выполнили запрос:
+ ```
+    vagrant@vagrant:~$ telnet stackoverflow.com 80
+    Trying 151.101.65.69...
+    Connected to stackoverflow.com.
+    Escape character is '^]'.
+    GET /questions HTTP/1.0                                                 
+    HOST: stackoverflow.com 
+    
+    HTTP/1.1 301 Moved Permanently
+    cache-control: no-cache, no-store, must-revalidate
+    location: https://stackoverflow.com/questions
+    x-request-guid: 8d49518c-5672-46ea-b297-7b1fcbde2f8f
+    feature-policy: microphone 'none'; speaker 'none'
+    content-security-policy: upgrade-insecure-requests; frame-ancestors 'self' https://stackexchange.com
+    Accept-Ranges: bytes
+    Date: Mon, 13 Dec 2021 14:45:04 GMT
+    Via: 1.1 varnish
+    Connection: close
+    X-Served-By: cache-hhn4036-HHN
+    X-Cache: MISS
+    X-Cache-Hits: 0
+    X-Timer: S1639406705.534936,VS0,VE85
+    Vary: Fastly-SSL
+    X-DNS-Prefetch-Control: off
+    Set-Cookie: prov=b80d884d-bdab-efa6-2e2c-787a3eab26a6; domain=.stackoverflow.com; expires=Fri, 01-Jan-2055 00:00:00 GMT; path=/; HttpOnly
+
+    Connection closed by foreign host.
+    vagrant@vagrant:~$ 
+
+ ```
 2. Повторите задание 1 в браузере, используя консоль разработчика F12.
 - откройте вкладку `Network`
 - отправьте запрос http://stackoverflow.com
