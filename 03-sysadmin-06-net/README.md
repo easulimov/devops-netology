@@ -313,3 +313,13 @@ HOST: stackoverflow.com
  ```
 8. Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой `dig`
  ### Решение
+ ```
+ 
+    vagrant@vagrant:~$ dig -x 8.8.8.8 | grep PTR
+    ;8.8.8.8.in-addr.arpa.		IN	PTR
+    8.8.8.8.in-addr.arpa.	4744	IN	PTR	dns.google.
+    vagrant@vagrant:~$ dig -x 8.8.4.4 | grep PTR
+    ;4.4.8.8.in-addr.arpa.		IN	PTR
+    4.4.8.8.in-addr.arpa.	6878	IN	PTR	dns.google.
+    vagrant@vagrant:~$ 
+ ```
