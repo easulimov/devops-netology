@@ -77,6 +77,113 @@ HOST: stackoverflow.com
  
 4. Какому провайдеру принадлежит ваш IP адрес? Какой автономной системе AS? Воспользуйтесь утилитой `whois`
  ### Решение
+ ```
+ 
+    vagrant@vagrant:~$ sudo apt install whois
+    Reading package lists... Done
+    Building dependency tree       
+    Reading state information... Done
+    The following NEW packages will be installed:
+      whois
+    0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+    Need to get 44.7 kB of archives.
+    After this operation, 279 kB of additional disk space will be used.
+    Get:1 http://archive.ubuntu.com/ubuntu focal/main amd64 whois amd64 5.5.6 [44.7 kB]
+    Fetched 44.7 kB in 1s (78.4 kB/s)
+    Selecting previously unselected package whois.
+    (Reading database ... 74894 files and directories currently installed.)
+    Preparing to unpack .../archives/whois_5.5.6_amd64.deb ...
+    Unpacking whois (5.5.6) ...
+    Setting up whois (5.5.6) ...
+    Processing triggers for man-db (2.9.1-1) ...
+    vagrant@vagrant:~$ whois 178.176.76.155
+    % This is the RIPE Database query service.
+    % The objects are in RPSL format.
+    %
+    % The RIPE Database is subject to Terms and Conditions.
+    % See http://www.ripe.net/db/support/db-terms-conditions.pdf
+
+    % Note: this output has been filtered.
+    %       To receive output for a database update, use the "-B" flag.
+    
+    % Information related to '178.176.64.0 - 178.176.95.255'
+
+    % Abuse contact for '178.176.64.0 - 178.176.95.255' is 'abuse-mailbox@megafon.ru'
+
+    inetnum:        178.176.64.0 - 178.176.95.255
+    netname:        MF-GNOC-STF-20180202
+    descr:          Metropolitan branch of OJSC MegaFon AS25159 178.176.64.0/19
+    country:        RU
+    org:            ORG-OM1-RIPE
+    admin-c:        MFMS-RIPE
+    tech-c:         MFMS-RIPE
+    status:         ASSIGNED PA
+    mnt-by:         MEGAFON-RIPE-MNT
+    mnt-lower:      MEGAFON-AUTO-MNT
+    mnt-lower:      MF-MOSCOW-MNT
+    mnt-routes:     MF-MOSCOW-MNT
+    mnt-domains:    MF-MOSCOW-MNT
+    created:        2018-10-16T11:01:59Z
+    last-modified:  2019-11-29T11:09:03Z
+    source:         RIPE
+
+    organisation:   ORG-OM1-RIPE
+    org-name:       PJSC MegaFon
+    country:        RU
+    org-type:       LIR
+    address:        41, Oruzheyniy lane
+    address:        127006
+    address:        Moscow
+    address:        RUSSIAN FEDERATION
+    phone:          +74955077777
+    phone:          +74959801970
+    fax-no:         +74959801939
+    fax-no:         +74959801949
+    admin-c:        MFON-RIPE
+    tech-c:         MFON-RIPE
+    abuse-c:        MFON-RIPE
+    mnt-by:         RIPE-NCC-HM-MNT
+    mnt-by:         MEGAFON-RIPE-MNT
+    mnt-ref:        RIPE-NCC-HM-MNT
+    mnt-ref:        MEGAFON-RIPE-MNT
+    created:        2004-04-17T11:55:06Z
+    last-modified:  2020-12-16T12:48:00Z
+    source:         RIPE # Filtered
+    
+    role:           Moscow Branch of PJSC MegaFon Internet Center
+    address:        41 Oruzheyniy lane, Moscow, Russia, 127006
+    admin-c:        IK9000-RIPE
+    admin-c:        MFON-RIPE
+    tech-c:         IK9000-RIPE
+    tech-c:         MFON-RIPE
+    nic-hdl:        MFMS-RIPE
+    mnt-by:         MF-MOSCOW-MNT
+    mnt-by:         MEGAFON-GNOC-MNT
+    mnt-by:         MEGAFON-WEST-MNT
+    mnt-by:         MEGAFON-RIPE-MNT
+    created:        2008-03-25T13:13:46Z
+    last-modified:  2019-11-06T11:53:19Z
+    source:         RIPE # Filtered
+    
+    % Information related to '178.176.64.0/19AS25159'
+    
+    route:          178.176.64.0/19
+    descr:          MF-MOSCOW-NAT-POOL-178-176-64-0
+    origin:         AS25159
+    remarks:
+    mnt-by:         MF-MOSCOW-MNT
+    mnt-by:         MEGAFON-AUTO-MNT
+    created:        2018-10-09T06:47:56Z
+    last-modified:  2019-11-18T07:11:57Z
+    source:         RIPE
+    
+    % This query was served by the RIPE Database Query Service version 1.102.1 (ANGUS)
+    
+    
+    vagrant@vagrant:~$ 
+ ```
+ * Провайдер Мегафон: `org-name: PJSC MegaFon`, автономная система: `AS25159`
+ 
 5. Через какие сети проходит пакет, отправленный с вашего компьютера на адрес 8.8.8.8? Через какие AS? Воспользуйтесь утилитой `traceroute`
  ### Решение
 6. Повторите задание 5 в утилите `mtr`. На каком участке наибольшая задержка - delay?
