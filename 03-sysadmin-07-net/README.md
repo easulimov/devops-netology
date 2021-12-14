@@ -143,6 +143,70 @@
 ```
 
 3. Какая технология используется для разделения L2 коммутатора на несколько виртуальных сетей? Какой пакет и команды есть в Linux для этого? Приведите пример конфига.
+* Для разделения L2 коммутатора на несколько виртуальных сетей используется технология VLAN (Virtual Local Area Network)
+* В Linux для использоватния технологии VLAN требуется установка одноименного пакета:
+```
+    vagrant@vagrant:~$ sudo apt info vlan
+    Package: vlan
+    Version: 2.0.4ubuntu1.20.04.1
+    ...
+    vagrant@vagrant:~$ sudo apt install vlan
+    ...
+```
+* Для использования возможностей требуется проверить, что загружен модуль ядра `8021q` (если он не загружен, требуется воспользоваться командой `modprobe 8021q`, и `sudo su -c 'echo "8021q" >> /etc/modules'` - чтобы включить перманентно):
+```
+    vagrant@vagrant:~$ sudo lsmod | grep 8021q
+    8021q                  32768  0
+    garp                   16384  1 8021q
+    mrp                    20480  1 8021q
+    vagrant@vagrant:~$ 
+```
+* Для настройки интерфейса VLAN можно испоьзовать команду `IP`:
+```
+    vagrant@vagrant:~$ ip -c -br link
+    lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+    eth0             UP             08:00:27:73:60:cf <BROADCAST,MULTICAST,UP,LOWER_UP> 
+    vagrant@vagrant:~$ sudo ip link add link eth0 name eth0.10 type vlan id 10
+    vagrant@vagrant:~$ 
+    vagrant@vagrant:~$ ip -c -d link show eth0.10
+    3: eth0.10@eth0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether 08:00:27:73:60:cf brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 0 maxmtu 65535 
+    vlan protocol 802.1Q id 10 <REORDER_HDR> addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 
+    vagrant@vagrant:~$ 
+    vagrant@vagrant:~$ ip -c -br link
+    lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+    eth0             UP             08:00:27:73:60:cf <BROADCAST,MULTICAST,UP,LOWER_UP> 
+    eth0.10@eth0     DOWN           08:00:27:73:60:cf <BROADCAST,MULTICAST> 
+    vagrant@vagrant:~$ sudo ip addr add 192.168.1.200/24 brd 192.168.1.255 dev eth0.10
+    vagrant@vagrant:~$ sudo ip link set dev eth0.10 up
+    vagrant@vagrant:~$ ip -c -br link
+    lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+    eth0             UP             08:00:27:73:60:cf <BROADCAST,MULTICAST,UP,LOWER_UP> 
+    eth0.10@eth0     UP             08:00:27:73:60:cf <BROADCAST,MULTICAST,UP,LOWER_UP> 
+    vagrant@vagrant:~$ 
+    vagrant@vagrant:~$ ip a
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+    2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:73:60:cf brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic eth0
+       valid_lft 74405sec preferred_lft 74405sec
+    inet6 fe80::a00:27ff:fe73:60cf/64 scope link 
+       valid_lft forever preferred_lft forever
+    3: eth0.10@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+        link/ether 08:00:27:73:60:cf brd ff:ff:ff:ff:ff:ff
+        inet 192.168.1.200/24 brd 192.168.1.255 scope global eth0.10
+           valid_lft forever preferred_lft forever
+        inet6 fe80::a00:27ff:fe73:60cf/64 scope link 
+           valid_lft forever preferred_lft forever
+   vagrant@vagrant:~$ 
+```
+* Для внесения изменений на постоянной основе, потребуется потребуется изменить конфиг netplan `/etc/netplan/01-netcfg.yaml`
+
 
 4. Какие типы агрегации интерфейсов есть в Linux? Какие опции есть для балансировки нагрузки? Приведите пример конфига.
 
