@@ -236,27 +236,66 @@
      ```
      * Выполним настройку с помощью netplan
      ```
-         vagrant@ubuntu02:~$ sudo vim /etc/netplan/01-netcfg.yaml 
-         
-         network:
-           version: 2
-           renderer: networkd
-           ethernets:
-             eth0:
-               dhcp4: true
-             eth1:
-               dhcp4: no
-               optional: true
-             eth2:
-               dhcp4: no
-               optional: true
-           bonds:
-             bond0:
-               interfaces: [eth1, eth2]
-               addresses: [192.168.56.10/24]
-               parameters:
-                  mode: balance-rr
-                  mii-monitor-interval: 1
+        root@ubuntu01:~# ip -c -br link
+        lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+        eth0             UP             08:00:27:73:60:cf <BROADCAST,MULTICAST,UP,LOWER_UP> 
+        eth1             UP             08:00:27:53:2d:4a <BROADCAST,MULTICAST,UP,LOWER_UP> 
+        eth2             UP             3e:d2:b8:7c:64:e2 <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> 
+        eth3             UP             3e:d2:b8:7c:64:e2 <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> 
+        bond0            UP             3e:d2:b8:7c:64:e2 <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> 
+        root@ubuntu01:~# ip -c r
+        default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+        10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
+        10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
+        192.168.8.0/24 dev bond0 proto kernel scope link src 192.168.8.10 
+        192.168.8.0/24 via 192.168.8.10 dev bond0 proto static 
+        192.168.56.0/24 dev eth1 proto kernel scope link src 192.168.56.10 
+        root@ubuntu01:~# cat /proc/net/bonding/bond0 
+        Ethernet Channel Bonding Driver: v3.7.1 (April 27, 2011)
+
+        Bonding Mode: load balancing (round-robin)
+        MII Status: up
+        MII Polling Interval (ms): 100
+        Up Delay (ms): 0
+        Down Delay (ms): 0
+        Peer Notification Delay (ms): 0
+
+        Slave Interface: eth3
+        MII Status: up
+        Speed: 1000 Mbps
+        Duplex: full
+        Link Failure Count: 0
+        Permanent HW addr: 08:00:27:41:39:87
+        Slave queue ID: 0
+
+        Slave Interface: eth2
+        MII Status: up
+        Speed: 1000 Mbps
+        Duplex: full
+        Link Failure Count: 0
+        Permanent HW addr: 08:00:27:bd:e7:f2
+        Slave queue ID: 0
+        root@ubuntu01:~# cat /etc/netplan/20-bonding.yaml 
+        network:
+          version: 2
+          renderer: networkd
+          ethernets:
+            eth2:
+              dhcp4: no
+            eth3:
+              dhcp4: no
+          bonds:
+            bond0:
+              interfaces: [eth2, eth3]
+              addresses: [192.168.8.10/24]
+              parameters:
+                 mode: balance-rr
+                 mii-monitor-interval: 100
+              routes:
+                 - to: 192.168.8.0/24
+                   via: 192.168.8.10
+                   on-link: true
+        root@ubuntu01:~# 
      
      ```
 5. Сколько IP адресов в сети с маской /29 ? Сколько /29 подсетей можно получить из сети с маской /24. Приведите несколько примеров /29 подсетей внутри сети 10.10.10.0/24.
