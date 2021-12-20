@@ -353,6 +353,46 @@
         Hosts:     192
         root@vagrant:~# 
     ```
+    * Примеры подсетей /29 внутри сети 10.10.10.0/24
+    ```
+       root@vagrant:~# ipcalc -b 10.10.10.0/24 /29
+       Address:   10.10.10.0           
+       Netmask:   255.255.255.0 = 24   
+       Wildcard:  0.0.0.255            
+       =>
+       Network:   10.10.10.0/24        
+       HostMin:   10.10.10.1           
+       HostMax:   10.10.10.254         
+       Broadcast: 10.10.10.255         
+       Hosts/Net: 254                   Class A, Private Internet
+
+       Subnets after transition from /24 to /29
+
+       Netmask:   255.255.255.248 = 29 
+       Wildcard:  0.0.0.7              
+       
+        1.
+       Network:   10.10.10.0/29        
+       HostMin:   10.10.10.1           
+       HostMax:   10.10.10.6           
+       Broadcast: 10.10.10.7           
+       Hosts/Net: 6                     Class A, Private Internet
+       
+        2.
+       Network:   10.10.10.8/29        
+       HostMin:   10.10.10.9           
+       HostMax:   10.10.10.14          
+       Broadcast: 10.10.10.15          
+       Hosts/Net: 6                     Class A, Private Internet
+
+        3.
+       Network:   10.10.10.16/29       
+       HostMin:   10.10.10.17          
+       HostMax:   10.10.10.22          
+       Broadcast: 10.10.10.23          
+       Hosts/Net: 6                     Class A, Private Internet
+       ...
+    ```
 6. Задача: вас попросили организовать стык между 2-мя организациями. Диапазоны 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 уже заняты. Из какой подсети допустимо взять частные IP адреса? Маску выберите из расчета максимум 40-50 хостов внутри подсети.
     ### Решение
 7. Как проверить ARP таблицу в Linux, Windows? Как очистить ARP кеш полностью? Как из ARP таблицы удалить только один нужный IP?
