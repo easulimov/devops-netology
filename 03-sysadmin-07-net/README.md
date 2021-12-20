@@ -234,7 +234,7 @@
          
          bonding
      ```
-     * Выполним настройку с помощью netplan
+     * `bonding` - пример конфига
      ```
         root@ubuntu01:~# ip -c -br link
         lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
