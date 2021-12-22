@@ -465,7 +465,7 @@
         
         C:\Users\User> 
     ```
-    * Очистка ARP кеша полностью в Linux - `ip neigh flush`, в Windows `arp -d *`
+    * Очистка ARP кеша полностью в Linux - `ip neigh flush all`, в Windows `arp -d *`
     * Удаление одного адреса из ARP таблицы в Linux - `ip neigh del dev eth0 10.0.2.2`, в Windows `arp -d 192.168.8.105`
 
  ---
