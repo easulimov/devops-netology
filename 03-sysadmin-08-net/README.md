@@ -91,7 +91,7 @@
 ### Решение
 * Включение модуля:
 ```
-       root@vagrant:~# modprobe -v dummy numdummies=2
+       root@vagrant:~# modprobe dummy
        root@vagrant:~# echo "dummy" >> /etc/modules
 ```
 * Если требуется более одного интерфейса dummy - `echo "options dummy numdummies=2" > /etc/modprobe.d/dummy.conf`
