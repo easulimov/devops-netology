@@ -89,7 +89,23 @@
  ```
 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.
 ### Решение
-* Создание dummy интерфейса, конфиг в netplan:
+* Включение модуля:
+```
+       root@vagrant:~# modprobe -v dummy numdummies=2
+       root@vagrant:~# echo "dummy" >> /etc/modules
+```
+    * Если требуется более одного интерфейса dummy - `echo "options dummy numdummies=2" > /etc/modprobe.d/dummy.conf`
+        ```
+            root@vagrant:~# modprobe -v dummy numdummies=2
+            root@vagrant:~# echo "dummy" >> /etc/modules
+            root@vagrant:~# echo "options dummy numdummies=2" > /etc/modprobe.d/dummy.conf
+        ```
+* Добавить интерейсы с помощью команды `ip`:
+```
+   root@vagrant:~# ip link add dummy0 type dummy
+   root@vagrant:~# ip addr add 172.17.16.1/32 dev dummy0
+```
+* Создание dummy интерфейса, конфиг для netplan:
 ```
    root@vagrant:~# cat /etc/netplan/02-dummy.yaml 
    network:
@@ -101,9 +117,7 @@
          dhcp6: no
          accept-ra: no
          interfaces: [ ]
-         addresses:
-           - 172.17.16.1/24
-           - 172.17.16.254/24
+         addresses: [172.17.16.1/32]
    root@vagrant:~# 
 ```
 
