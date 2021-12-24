@@ -94,12 +94,12 @@
        root@vagrant:~# modprobe -v dummy numdummies=2
        root@vagrant:~# echo "dummy" >> /etc/modules
 ```
-    * Если требуется более одного интерфейса dummy - `echo "options dummy numdummies=2" > /etc/modprobe.d/dummy.conf`
-        ```
-            root@vagrant:~# modprobe -v dummy numdummies=2
-            root@vagrant:~# echo "dummy" >> /etc/modules
-            root@vagrant:~# echo "options dummy numdummies=2" > /etc/modprobe.d/dummy.conf
-        ```
+* Если требуется более одного интерфейса dummy - `echo "options dummy numdummies=2" > /etc/modprobe.d/dummy.conf`
+```
+   root@vagrant:~# modprobe -v dummy numdummies=2
+   root@vagrant:~# echo "dummy" >> /etc/modules
+   root@vagrant:~# echo "options dummy numdummies=2" > /etc/modprobe.d/dummy.conf
+```
 * Добавить интерейсы с помощью команды `ip`:
 ```
    root@vagrant:~# ip link add dummy0 type dummy
