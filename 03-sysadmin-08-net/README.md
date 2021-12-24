@@ -25,7 +25,7 @@
    route-views>show bgp 31.173.84.141 255.255.255.255
    % Network not in table
 ```
- * Сообщения `% Subnet not in table` и `% Network not in table` появились потому что на маршрутизаторе `route-views.routeviews.org` отсутствуют записи маршрутов для маски /32
+ * Сообщения `% Subnet not in table` и `% Network not in table` появились потому что на маршрутизаторе `route-views.routeviews.org` отсутствуют записи маршрутов  c с указанным IP для маски /32
  * Проверим маршруты без указания маски:
  ``` 
     route-views>show ip route 31.173.84.141                
@@ -39,7 +39,8 @@
           AS Hops 3
           Route tag 852
           MPLS label: none
-    route-views>show bgp 31.173.84.141
+    route-views>
+    route-views>show ip bgp 31.173.84.141  
     BGP routing table entry for 31.173.80.0/21, version 1418388713
     Paths: (23 available, best #11, table default)
       Not advertised to any peer
@@ -63,7 +64,28 @@
           path 7FE14E887760 RPKI State not found
           rx pathid: 0, tx pathid: 0
       Refresh Epoch 1
-    ...
+      3333 31133 25159, (aggregated by 25159 10.97.0.225)
+        193.0.0.56 from 193.0.0.56 (193.0.0.56)
+          Origin IGP, localpref 100, valid, external
+          path 7FE015CC6350 RPKI State not found
+          rx pathid: 0, tx pathid: 0
+      Refresh Epoch 2
+      8283 31133 25159, (aggregated by 25159 10.97.0.225)
+     --More-- 
+        ...
+ ```
+ * Можно сразу посмотреть лучший маршрут BGP:
+ ```
+    route-views>show ip bgp 31.173.84.141 best
+    BGP routing table entry for 31.173.80.0/21, version 1418388713
+    Paths: (23 available, best #11, table default)
+      Not advertised to any peer
+      Refresh Epoch 1
+      852 31133 25159, (aggregated by 25159 10.97.0.225)
+        154.11.12.212 from 154.11.12.212 (96.1.209.43)
+          Origin IGP, metric 0, localpref 100, valid, external, best
+          path 7FE16B60D488 RPKI State not found
+          rx pathid: 0, tx pathid: 0x0
  ```
 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.
 ### Решение
