@@ -89,6 +89,23 @@
  ```
 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.
 ### Решение
+* Создание dummy интерфейса, конфиг в netplan:
+```
+   root@vagrant:~# cat /etc/netplan/02-dummy.yaml 
+   network:
+     version: 2
+     renderer: networkd
+     bridges:
+       dummy0:
+         dhcp4: no
+         dhcp6: no
+         accept-ra: no
+         interfaces: [ ]
+         addresses:
+           - 172.17.16.1/24
+           - 172.17.16.254/24
+   root@vagrant:~# 
+```
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
 ### Решение
