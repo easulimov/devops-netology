@@ -307,7 +307,7 @@
 5. Используя diagrams.net, создайте L3 диаграмму вашей домашней сети или любой другой сети, с которой вы работали. 
 ### Решение
 * [Диаграмма](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-08-net/img/diagrams/My%20VBox%20Net.png)
-* [Файл проекта *.drawio](https://github.com/easulimov/devops-netology/tree/main/03-sysadmin-08-net/img/diagrams)
+* [Файл проекта  *.drawio](https://github.com/easulimov/devops-netology/tree/main/03-sysadmin-08-net/img/diagrams)
 
  ---
 ## Задание для самостоятельной отработки (необязательно к выполнению)
