@@ -316,13 +316,14 @@
 ```
 * Можно посмотреть без разрешения номеров портов в имена служб:
 ```
-    vagrant@ubuntu01:~$ ss -tln
-    State     Recv-Q    Send-Q         Local Address:Port         Peer Address:Port    Process    
-    LISTEN    0         4096                 0.0.0.0:111               0.0.0.0:*                  
-    LISTEN    0         4096           127.0.0.53%lo:53                0.0.0.0:*                  
-    LISTEN    0         128                  0.0.0.0:22                0.0.0.0:*                  
-    LISTEN    0         4096                    [::]:111                  [::]:*                  
-    LISTEN    0         128                     [::]:22                   [::]:*                  
+    vagrant@ubuntu01:~$ ss -ltna
+    State     Recv-Q    Send-Q        Local Address:Port         Peer Address:Port     Process    
+    LISTEN    0         4096                0.0.0.0:111               0.0.0.0:*                   
+    LISTEN    0         4096          127.0.0.53%lo:53                0.0.0.0:*                   
+    LISTEN    0         128                 0.0.0.0:22                0.0.0.0:*                   
+    ESTAB     0         0                 10.0.2.15:22               10.0.2.2:51214               
+    LISTEN    0         4096                   [::]:111                  [::]:*                   
+    LISTEN    0         128                    [::]:22                   [::]:*                   
     vagrant@ubuntu01:~$ 
 ```
 * Как видно из примера, TCP порты используют различные протоколы ssh, dns, rpc
@@ -348,6 +349,28 @@
 
 4. Проверьте используемые UDP сокеты в Ubuntu, какие протоколы и приложения используют эти порты?
 ### Решение
+* UDP сокеты в Ubuntu:
+```
+    vagrant@ubuntu01:~$ ss -uan
+    State     Recv-Q    Send-Q         Local Address:Port         Peer Address:Port    Process    
+    UNCONN    0         0              127.0.0.53%lo:53                0.0.0.0:*                  
+    UNCONN    0         0             10.0.2.15%eth0:68                0.0.0.0:*                  
+    UNCONN    0         0                    0.0.0.0:111               0.0.0.0:*                  
+    UNCONN    0         0                       [::]:111                  [::]:*                  
+    vagrant@ubuntu01:~$ 
+```
+* Как видно из примера, UPD порты используют различные протоколы dns, dhcp, rpc. 
+```
+    vagrant@ubuntu01:~$ sudo lsof -i udp:53
+    COMMAND   PID            USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    systemd-r 570 systemd-resolve   12u  IPv4  21672      0t0  UDP localhost:domain
+    vagrant@ubuntu01:~$ sudo lsof -i udp:68
+    COMMAND    PID            USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    systemd-n 1118 systemd-network   24u  IPv4  26612      0t0  UDP ubuntu01:bootpc 
+    vagrant@ubuntu01:~$ sudo lsof -i udp:68
+    COMMAND    PID            USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    systemd-n 1118 systemd-network   24u  IPv4  26612      0t0  UDP ubuntu01:bootpc
+```
 
 5. Используя diagrams.net, создайте L3 диаграмму вашей домашней сети или любой другой сети, с которой вы работали. 
 ### Решение
