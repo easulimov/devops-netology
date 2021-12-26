@@ -224,8 +224,59 @@
     10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
     192.168.57.0/24 dev eth1 proto kernel scope link src 192.168.57.51 
     vagrant@ubuntu03:~$ 
+    
 ```
-* В такой конфигу
+* В такой конфигурации виртуальные машины ubuntu02 и ubuntu03 не могут получить доступ к друг другу:
+```
+   vagrant@ubuntu03:~$ ping 192.168.56.41
+   PING 192.168.56.41 (192.168.56.41) 56(84) bytes of data.
+   From 10.0.2.2 icmp_seq=9 Destination Net Unreachable
+   From 10.0.2.2 icmp_seq=10 Destination Net Unreachable
+   From 10.0.2.2 icmp_seq=11 Destination Net Unreachable
+   From 10.0.2.2 icmp_seq=12 Destination Net Unreachable
+   ^C
+   --- 192.168.56.41 ping statistics ---
+   12 packets transmitted, 0 received, +4 errors, 100% packet loss, time 12772ms
+```
+* Добавим статитческие маршруты на виртуальных машинах ubuntu02(192.168.56.41/24) и ubuntu03 (ip 192.168.57.51/24):
+```
+    vagrant@ubuntu02:~$ sudo ip route add 192.168.57.0/24 via 192.168.56.4
+    vagrant@ubuntu02:~$ ip r
+    default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+    10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
+    10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
+    192.168.56.0/24 dev eth1 proto kernel scope link src 192.168.56.41 
+    192.168.57.0/24 via 192.168.56.4 dev eth1 
+    vagrant@ubuntu02:~$ 
+    ...
+    
+    vagrant@ubuntu03:~$ sudo ip route add 192.168.56.0/24 via 192.168.57.5
+    vagrant@ubuntu03:~$ ip r
+    default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+    10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
+    10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
+    192.168.56.0/24 via 192.168.57.5 dev eth1 
+    192.168.57.0/24 dev eth1 proto kernel scope link src 192.168.57.51 
+```
+* Проверим доступность виртуальной машины ubuntu02(192.168.56.41/24) из вирутальной машины ubuntu03(ip 192.168.57.51/24):
+```
+    vagrant@ubuntu03:~$ ping 192.168.56.41
+    PING 192.168.56.41 (192.168.56.41) 56(84) bytes of data.
+    64 bytes from 192.168.56.41: icmp_seq=1 ttl=63 time=0.793 ms
+    64 bytes from 192.168.56.41: icmp_seq=2 ttl=63 time=1.01 ms
+    64 bytes from 192.168.56.41: icmp_seq=3 ttl=63 time=0.867 ms
+    64 bytes from 192.168.56.41: icmp_seq=4 ttl=63 time=0.904 ms
+    64 bytes from 192.168.56.41: icmp_seq=5 ttl=63 time=0.772 ms
+    ^C
+    --- 192.168.56.41 ping statistics ---
+    5 packets transmitted, 5 received, 0% packet loss, time 4102ms
+    rtt min/avg/max/mdev = 0.772/0.868/1.008/0.084 ms
+    vagrant@ubuntu03:~$ traceroute 192.168.56.41
+    traceroute to 192.168.56.41 (192.168.56.41), 30 hops max, 60 byte packets
+     1  192.168.57.5 (192.168.57.5)  0.697 ms  0.665 ms  0.855 ms
+     2  192.168.56.41 (192.168.56.41)  0.842 ms  0.831 ms  0.902 ms
+    vagrant@ubuntu03:~$ 
+```
 
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
