@@ -95,8 +95,8 @@
       config.vm.define "ubuntu01" do |vm1|
         vm1.vm.hostname = "ubuntu01"
         vm1.vm.box = "bento/ubuntu-20.04"
-        vm1.vm.network "private_network", ip: "192.168.56.4"
-        vm1.vm.network "private_network", ip: "192.168.57.5"
+        vm1.vm.network "private_network", ip: "192.168.56.4", virtualbox__intnet: "mynetwork1"
+        vm1.vm.network "private_network", ip: "192.168.57.5", virtualbox__intnet: "mynetwork2"
         vm1.vm.provider "virtualbox" do |vb|
           vb.name = "ubuntu01"
           vb.gui = false
@@ -106,7 +106,7 @@
       config.vm.define "ubuntu02" do |vm2|
         vm2.vm.hostname = "ubuntu02"
         vm2.vm.box = "bento/ubuntu-20.04"
-        vm2.vm.network "private_network", ip: "192.168.56.41"
+        vm2.vm.network "private_network", ip: "192.168.56.41", virtualbox__intnet: "mynetwork1"
         vm2.vm.provider "virtualbox" do |vb|
           vb.name = "ubuntu02"
           vb.gui = false
@@ -116,7 +116,7 @@
         config.vm.define "ubuntu03" do |vm2|
         vm2.vm.hostname = "ubuntu03"
         vm2.vm.box = "bento/ubuntu-20.04"
-        vm2.vm.network "private_network", ip: "192.168.57.51"    
+        vm2.vm.network "private_network", ip: "192.168.57.51", virtualbox__intnet: "mynetwork2"    
         vm2.vm.provider "virtualbox" do |vb|
           vb.name = "ubuntu03"
           vb.gui = false
