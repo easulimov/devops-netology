@@ -180,6 +180,53 @@
     rtt min/avg/max/mdev = 0.011/0.037/0.048/0.015 ms
     root@ubuntu01:~# 
 ```
+* Включим перессылку пакетов на виртуальной машине, которая подключена к двум внутренним сетям:
+```
+     root@ubuntu01:~# cat /proc/sys/net/ipv4/ip_forward
+     0
+     root@ubuntu01:~# sysctl -w net.ipv4.ip_forward=1
+     net.ipv4.ip_forward = 1
+     root@ubuntu01:~# 
+```
+* Для включения форвардинга пакетов после перезагрузки системы отредактируем опцию `net.ipv4.ip_forward = 1` в файле `/etc/sysctl.conf`
+```
+    root@ubuntu01:~# vim /etc/sysctl.conf
+    ...
+    # Uncomment the next line to enable packet forwarding for IPv4
+    net.ipv4.ip_forward=1
+```
+* Настройки на vm ubuntu02:
+```
+   vagrant@ubuntu02:~$ hostname
+   ubuntu02
+   vagrant@ubuntu02:~$ ip -br a
+   lo               UNKNOWN        127.0.0.1/8 ::1/128 
+   eth0             UP             10.0.2.15/24 fe80::a00:27ff:fe73:60cf/64 
+   eth1             UP             192.168.56.41/24 fe80::a00:27ff:fe42:33b7/64 
+   vagrant@ubuntu02:~$ ip -br r
+   default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+   10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
+   10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
+   192.168.56.0/24 dev eth1 proto kernel scope link src 192.168.56.41 
+   vagrant@ubuntu02:~$ 
+```
+* Настройки на vm ubuntu03:
+```
+    vagrant@ubuntu03:~$ hostname
+    ubuntu03
+    vagrant@ubuntu03:~$ ip -br a
+    lo               UNKNOWN        127.0.0.1/8 ::1/128 
+    eth0             UP             10.0.2.15/24 fe80::a00:27ff:fe73:60cf/64 
+    eth1             UP             192.168.57.51/24 fe80::a00:27ff:fe97:ad09/64 
+    vagrant@ubuntu03:~$ ip -br r
+    default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+    10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
+    10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
+    192.168.57.0/24 dev eth1 proto kernel scope link src 192.168.57.51 
+    vagrant@ubuntu03:~$ 
+```
+* В такой конфигу
+
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
 ### Решение
