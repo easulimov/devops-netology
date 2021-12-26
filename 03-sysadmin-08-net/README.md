@@ -277,6 +277,25 @@
      2  192.168.56.41 (192.168.56.41)  0.842 ms  0.831 ms  0.902 ms
     vagrant@ubuntu03:~$ 
 ```
+* Чтобы маршруты остались после перезагрузки, отредактируем на каждой netplan. Ниже пример для виртуальной машины ubuntu02:
+```
+    vagrant@ubuntu02:~$ sudo vim /etc/netplan/50-vagrant.yaml
+    ---
+    network:
+      version: 2
+      renderer: networkd
+      ethernets:
+        eth1:
+          addresses:
+          - 192.168.56.41/24
+          routes:
+          - to: 192.168.57.0/24
+            via: 192.168.56.4
+    ...
+    vagrant@ubuntu02:~$ sudo netplan apply
+    vagrant@ubuntu02:~$ sudo systemctl restart systemd-networkd
+
+```
 
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
