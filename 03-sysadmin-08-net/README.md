@@ -367,9 +367,13 @@
     vagrant@ubuntu01:~$ sudo lsof -i udp:68
     COMMAND    PID            USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
     systemd-n 1118 systemd-network   24u  IPv4  26612      0t0  UDP ubuntu01:bootpc 
-    vagrant@ubuntu01:~$ sudo lsof -i udp:68
-    COMMAND    PID            USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-    systemd-n 1118 systemd-network   24u  IPv4  26612      0t0  UDP ubuntu01:bootpc
+    vagrant@ubuntu01:~$ sudo lsof -i udp:111
+    COMMAND PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    systemd   1 root  114u  IPv4  15677      0t0  UDP *:sunrpc 
+    systemd   1 root  116u  IPv6  15683      0t0  UDP *:sunrpc 
+    rpcbind 569 _rpc    5u  IPv4  15677      0t0  UDP *:sunrpc 
+    rpcbind 569 _rpc    7u  IPv6  15683      0t0  UDP *:sunrpc 
+    vagrant@ubuntu01:~$ 
 ```
 
 5. Используя diagrams.net, создайте L3 диаграмму вашей домашней сети или любой другой сети, с которой вы работали. 
