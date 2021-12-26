@@ -300,6 +300,51 @@
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
 ### Решение
+* Проверим открытые порты TCP с помощью команды `SS`. `ESTAB`- TCP соединение установлено, `LISTEN` - порты в ожидании входящего трафика:
+```
+   vagrant@ubuntu01:~$ ss -pt
+   State  Recv-Q  Send-Q     Local Address:Port     Peer Address:Port   Process  
+   ESTAB  0       0              10.0.2.15:ssh          10.0.2.2:51214           
+   vagrant@ubuntu01:~$ ss -ptl
+   State   Recv-Q  Send-Q   Local Address:Port       Peer Address:Port  Process  
+   LISTEN  0       4096           0.0.0.0:sunrpc          0.0.0.0:*              
+   LISTEN  0       4096     127.0.0.53%lo:domain          0.0.0.0:*              
+   LISTEN  0       128            0.0.0.0:ssh             0.0.0.0:*              
+   LISTEN  0       4096              [::]:sunrpc             [::]:*              
+   LISTEN  0       128               [::]:ssh                [::]:*              
+   vagrant@ubuntu01:~$ 
+```
+* Можно посмотреть без разрешения номеров портов в имена служб:
+```
+    vagrant@ubuntu01:~$ ss -tln
+    State     Recv-Q    Send-Q         Local Address:Port         Peer Address:Port    Process    
+    LISTEN    0         4096                 0.0.0.0:111               0.0.0.0:*                  
+    LISTEN    0         4096           127.0.0.53%lo:53                0.0.0.0:*                  
+    LISTEN    0         128                  0.0.0.0:22                0.0.0.0:*                  
+    LISTEN    0         4096                    [::]:111                  [::]:*                  
+    LISTEN    0         128                     [::]:22                   [::]:*                  
+    vagrant@ubuntu01:~$ 
+```
+* Как видно из примера, TCP порты используют различные протоколы ssh, dns, rpc
+* Можно более детально посмотреть, какие службы и приложения используют порты:
+```
+    vagrant@ubuntu01:~$ sudo lsof -i tcp:22 
+    COMMAND  PID    USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    sshd     811    root    3u  IPv4  22458      0t0  TCP *:ssh (LISTEN)
+    sshd     811    root    4u  IPv6  22469      0t0  TCP *:ssh (LISTEN)
+    sshd    1244    root    4u  IPv4  27235      0t0  TCP ubuntu01:ssh->_gateway:51214 (ESTABLISHED)
+    sshd    1281 vagrant    4u  IPv4  27235      0t0  TCP ubuntu01:ssh->_gateway:51214 (ESTABLISHED)
+    vagrant@ubuntu01:~$ sudo lsof -i tcp:111
+    COMMAND PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    systemd   1 root  113u  IPv4  15676      0t0  TCP *:sunrpc (LISTEN)
+    systemd   1 root  115u  IPv6  15680      0t0  TCP *:sunrpc (LISTEN)
+    rpcbind 569 _rpc    4u  IPv4  15676      0t0  TCP *:sunrpc (LISTEN)
+    rpcbind 569 _rpc    6u  IPv6  15680      0t0  TCP *:sunrpc (LISTEN)
+    vagrant@ubuntu01:~$ sudo lsof -i tcp:53
+    COMMAND   PID            USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    systemd-r 570 systemd-resolve   13u  IPv4  21673      0t0  TCP localhost:domain (LISTEN)
+    vagrant@ubuntu01:~$ 
+```
 
 4. Проверьте используемые UDP сокеты в Ubuntu, какие протоколы и приложения используют эти порты?
 ### Решение
