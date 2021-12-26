@@ -129,6 +129,9 @@
 ```
        root@vagrant:~# modprobe dummy
        root@vagrant:~# echo "dummy" >> /etc/modules
+       root@ubuntu01:~# lsmod | grep dummy
+       dummy                  16384  0
+       root@ubuntu01:~# 
 ```
 * Если требуется более одного интерфейса dummy - `echo "options dummy numdummies=2" > /etc/modprobe.d/dummy.conf`
 ```
@@ -139,6 +142,7 @@
 * Добавить интерейсы с помощью команды `ip`:
 ```
    root@vagrant:~# ip link add dummy0 type dummy
+   root@vagrant:~# ip link set dev dummy0 up
    root@vagrant:~# ip addr add 172.17.16.1/32 dev dummy0
 ```
 * Создание dummy интерфейса, конфиг для netplan:
@@ -155,6 +159,26 @@
          interfaces: [ ]
          addresses: [172.17.16.1/32]
    root@vagrant:~# 
+```
+* Проверим доступность dummy0:
+```
+    root@ubuntu01:~# ip -br a
+    lo               UNKNOWN        127.0.0.1/8 ::1/128 
+    eth0             UP             10.0.2.15/24 fe80::a00:27ff:fe73:60cf/64 
+    eth1             UP             192.168.56.4/24 fe80::a00:27ff:fe61:608f/64 
+    eth2             UP             192.168.57.5/24 fe80::a00:27ff:fe0d:33d4/64 
+    dummy0           UNKNOWN        172.17.16.1/32 fe80::8020:7aff:fef8:accd/64 
+    root@ubuntu01:~# ping 172.17.16.1
+    PING 172.17.16.1 (172.17.16.1) 56(84) bytes of data.
+    64 bytes from 172.17.16.1: icmp_seq=1 ttl=64 time=0.011 ms
+    64 bytes from 172.17.16.1: icmp_seq=2 ttl=64 time=0.046 ms
+    64 bytes from 172.17.16.1: icmp_seq=3 ttl=64 time=0.046 ms
+    64 bytes from 172.17.16.1: icmp_seq=4 ttl=64 time=0.048 ms
+    ^C
+    --- 172.17.16.1 ping statistics ---
+    4 packets transmitted, 4 received, 0% packet loss, time 3148ms
+    rtt min/avg/max/mdev = 0.011/0.037/0.048/0.015 ms
+    root@ubuntu01:~# 
 ```
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
