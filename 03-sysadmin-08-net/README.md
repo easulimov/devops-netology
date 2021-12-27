@@ -314,7 +314,7 @@
    LISTEN  0       128               [::]:ssh                [::]:*              
    vagrant@ubuntu01:~$ 
 ```
-* Можно посмотреть без разрешения номеров портов в имена служб:
+* Можно посмотреть без разрешения номеров портов в имена протоколов:
 ```
     vagrant@ubuntu01:~$ ss -ltna
     State     Recv-Q    Send-Q        Local Address:Port         Peer Address:Port     Process    
