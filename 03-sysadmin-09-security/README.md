@@ -216,6 +216,71 @@
     
 5. Установите на Ubuntu ssh сервер, сгенерируйте новый приватный ключ. Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу.
     ### Решение 
+    * Установим на виртуальной машине ssh сервер и добавим нового пользователя:
+    ```
+        root@vagrant:~# apt install -y openssh-server
+        root@vagrant:~# systemctl start sshd.service
+        root@vagrant:~# systemctl enable sshd.service
+        root@vagrant:~# adduser bart
+        Adding user `bart' ...
+        Adding new group `bart' (1001) ...
+        Adding new user `bart' (1001) with group `bart' ...
+        Creating home directory `/home/bart' ...
+        Copying files from `/etc/skel' ...
+        New password: 
+        Retype new password: 
+        ...
+        Is the information correct? [Y/n] y
+
+    ```
+    * Сгененрируем ssh ключи на хосте c помощью `ssh-keygen` и скопируем их с помощью `ssh-copy-id` в директорию пользователя `bart`, расположенную на виртуальной машине:
+    ```
+        gendalf@pc01:~/.ssh$ ssh-keygen -t rsa -b 4096 -C "TestKey"
+        Generating public/private rsa key pair.
+        Enter file in which to save the key (/home/gendalf/.ssh/id_rsa): 
+        Enter passphrase (empty for no passphrase): 
+        Enter same passphrase again: 
+        Your identification has been saved in /home/gendalf/.ssh/id_rsa
+        Your public key has been saved in /home/gendalf/.ssh/id_rsa.pub
+        ...
+        
+        gendalf@pc01:~/.ssh$ ssh-copy-id -p 2222 bart@localhost
+        The authenticity of host '[localhost]:2222 ([127.0.0.1]:2222)' can't be established.
+        ECDSA key fingerprint is SHA256:wSHl+h4vAtTT7mbkj2lbGyxWXWTUf6VUliwpncjwLPM.
+        Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+        /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+        /usr/bin/ssh-copy-id: INFO: 2 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+        bart@localhost's password: 
+        
+        Number of key(s) added: 2
+        
+        Now try logging into the machine, with:   "ssh -p '2222' 'bart@localhost'"
+        and check to make sure that only the key(s) you wanted were added.
+        
+        gendalf@pc01:~/.ssh$ ssh -p 2222 bart@localhost
+        
+    ```
+    * Подключимся к вируальной машине:
+    ```
+        gendalf@pc01:~/.ssh$ ssh -p 2222 bart@localhost
+        Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-80-generic x86_64)
+        
+         * Documentation:  https://help.ubuntu.com
+         * Management:     https://landscape.canonical.com
+         * Support:        https://ubuntu.com/advantage
+        
+          System information as of Sun 02 Jan 2022 02:18:06 PM UTC
+        
+          System load:  0.0               Processes:             137
+          Usage of /:   2.6% of 61.31GB   Users logged in:       1
+          Memory usage: 12%               IPv4 address for eth0: 10.0.2.15
+          Swap usage:   0%
+          ...
+
+          bart@vagrant:~$ 
+              
+    ```
+    
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.
     ### Решение
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
