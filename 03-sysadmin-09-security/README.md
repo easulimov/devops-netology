@@ -367,3 +367,25 @@
    ```
 
 9*. Установите и настройте фаервол ufw на web-сервер из задания 3. Откройте доступ снаружи только к портам 22,80,443
+   ### Решение
+   * Задействуем политики по умолчанию:
+   ```
+       root@vagrant:~# ufw default deny incoming
+       root@vagrant:~#  ufw default allow outgoing
+   ```
+   * Разрешим трафик от loopback:
+   ```
+       root@vagrant:~# ufw allow from 127.0.0.0/8 
+   ```
+   * Откроем доступ к портам 22,80,443:
+   ``` 
+       root@vagrant:~# ufw allow 22/tcp 80/tcp 443/tcp
+   
+   ```
+   * Активируем ufw и  проверим статус:
+   ```
+       root@vagrant:~# ufw enable
+       root@vagrant:~# ufw status verbose
+       root@vagrant:~# ufw show REPORT
+   ```
+   
