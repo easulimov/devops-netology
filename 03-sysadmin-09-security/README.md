@@ -144,9 +144,8 @@
        root@vagrant:/etc/apache2/sites-available# sudo systemctl reload apache2
        root@vagrant:/etc/apache2/sites-available# 
     ```
-    * Проверим сайт заглушку в браузере на хосте (`https://127.0.0.1:4949`) [Скриншот](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Apache2%20https%20access%20with%20selfsigned%20cert.png)
-    * 
-    
+    * Добавим самоподписной сертификат в доверенные, в браузере на хосте [Скриншот](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Cert%20added%20to%20trusted.png)
+    * Проверим сайт заглушку в браузере на хосте (`https://127.0.0.1:4949`) [Скриншот](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Test%20https%20access%20from%20host.png)
     
 4. Проверьте на TLS уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК ... и тому подобное).
     ### Решение
