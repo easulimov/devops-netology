@@ -57,7 +57,46 @@
         gendalf@pc01:~/vagrantdir$ 
     ```
     * Проверим сайт после запуска виртуальной машины. Введем URL `http://127.0.0.1:4848/` в браузере. [Скриншот](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Apache2%20http%20access.png)
-    * 
+    * Активируем модуль Apache mod_ssl, который предоставляет поддержку шифрования SSL:
+    ```
+       vagrant@vagrant:~$ sudo a2enmod ssl
+       Considering dependency setenvif for ssl:
+       Module setenvif already enabled
+       Considering dependency mime for ssl:
+       Module mime already enabled
+       Considering dependency socache_shmcb for ssl:
+       Enabling module socache_shmcb.
+       Enabling module ssl.
+       See /usr/share/doc/apache2/README.Debian.gz on how to configure SSL and create self-signed certificates.
+       To activate the new configuration, you need to run:
+         systemctl restart apache2
+       vagrant@vagrant:~$ sudo systemctl restart apache2
+       vagrant@vagrant:~$ 
+    ```
+    * Используем `openssl` для генерации самоподписного сертификата:
+    ```
+        vagrant@vagrant:~$ sudo openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/apch2_selfsign.key -out /etc/ssl/certs/apch2_selfsign.crt
+        Generating a RSA private key
+        .........++++
+        .................++++
+        writing new private key to '/etc/ssl/private/apch2_selfsign.key'
+        -----
+        You are about to be asked to enter information that will be incorporated
+        into your certificate request.
+        What you are about to enter is what is called a Distinguished Name or a DN.
+        There are quite a few fields but you can leave some blank
+        For some fields there will be a default value,
+        If you enter '.', the field will be left blank.
+        -----
+        Country Name (2 letter code) [AU]:RU
+        State or Province Name (full name) [Some-State]:Moscow region
+        Locality Name (eg, city) []:Dolgoprudny
+        Organization Name (eg, company) [Internet Widgits Pty Ltd]:TestOrganization
+        Organizational Unit Name (eg, section) []:
+        Common Name (e.g. server FQDN or YOUR name) []:Evgeniy
+        Email Address []:fox_su18@mail.ru
+        vagrant@vagrant:~$ 
+    ```
     
     
 4. Проверьте на TLS уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК ... и тому подобное).
