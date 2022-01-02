@@ -101,11 +101,51 @@
     * Изменим конфигурацию `Apache2` по-умолчанию:
     ```
        vagrant@vagrant:/etc/apache2/sites-enabled$ vim  000-default.conf
+       root@vagrant:/etc/apache2/sites-available# vim 000-default.conf 
+       root@vagrant:/etc/apache2/sites-available# cat 000-default.conf 
+       <VirtualHost *:80>
+       	ServerAdmin webmaster@localhost
+               DocumentRoot /var/www/html
        
-    
-    
-    
+       	ErrorLog ${APACHE_LOG_DIR}/error.log
+       	CustomLog ${APACHE_LOG_DIR}/access.log combined
+       </VirtualHost>
+       <IfModule mod_ssl.c>
+               <VirtualHost _default_:443>
+                       ServerAdmin webmaster@localhost
+       
+                       DocumentRoot /var/www/html
+       
+                       #LogLevel info ssl:warn
+
+                       ErrorLog ${APACHE_LOG_DIR}/error.log
+                       CustomLog ${APACHE_LOG_DIR}/access.log combined
+       
+                       #   SSL Engine Switch:
+                       #   Enable/Disable SSL for this virtual host.
+                       SSLEngine on
+       
+                       #   SSLCertificateFile directive is needed.
+                       SSLCertificateFile      /etc/ssl/certs/apch2_selfsign.crt
+                       SSLCertificateKeyFile /etc/ssl/private/apch2_selfsign.key
+
+                       #SSLOptions +FakeBasicAuth +ExportCertData +StrictRequire
+                       <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                       SSLOptions +StdEnvVars
+                       </FilesMatch>
+                       <Directory /usr/lib/cgi-bin>
+                                       SSLOptions +StdEnvVars
+                       </Directory>
+               </VirtualHost>
+       </IfModule>
+       # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+       root@vagrant:/etc/apache2/sites-available# sudo apache2ctl configtest
+       Syntax OK
+       root@vagrant:/etc/apache2/sites-available# sudo systemctl reload apache2
+       root@vagrant:/etc/apache2/sites-available# 
     ```
+    * Проверим сайт заглушку в браузере на хосте (`https://127.0.0.1:4949`) [Скриншот](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Apache2%20https%20access%20with%20selfsigned%20cert.png)
+    * 
     
     
 4. Проверьте на TLS уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК ... и тому подобное).
