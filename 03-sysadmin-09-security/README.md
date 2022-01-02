@@ -371,21 +371,54 @@
    * Задействуем политики по умолчанию:
    ```
        root@vagrant:~# ufw default deny incoming
+       Default incoming policy changed to 'deny'
+       (be sure to update your rules accordingly)
+
        root@vagrant:~# ufw default allow outgoing
+       Default outgoing policy changed to 'allow'
+       (be sure to update your rules accordingly)
    ```
    * Разрешим трафик от loopback:
    ```
-       root@vagrant:~# ufw allow from 127.0.0.0/8 
+       root@vagrant:~# ufw allow from 127.0.0.0/8
+       Rules updated
    ```
    * Откроем доступ к портам 22,80,443:
    ``` 
-       root@vagrant:~# ufw allow 22/tcp 80/tcp 443/tcp
-   
+       root@vagrant:~# ufw allow 22/tcp
+       Rules updated
+       Rules updated (v6)
+       root@vagrant:~# ufw allow 80/tcp
+       Rules updated
+       Rules updated (v6)
+       root@vagrant:~# ufw allow 443/tcp
+       Rules updated
+       Rules updated (v6)       
+
    ```
    * Активируем ufw и  проверим статус:
    ```
        root@vagrant:~# ufw enable
+       Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
+       Firewall is active and enabled on system startup
+
        root@vagrant:~# ufw status verbose
-       root@vagrant:~# ufw show REPORT
+       root@vagrant:~# ufw status verbose
+       Status: active
+       Logging: on (low)
+       Default: deny (incoming), allow (outgoing), disabled (routed)
+       New profiles: skip
+       
+       To                         Action      From
+       --                         ------      ----
+       Anywhere                   ALLOW IN    127.0.0.0/8               
+       22/tcp                     ALLOW IN    Anywhere                  
+       80/tcp                     ALLOW IN    Anywhere                  
+       443/tcp                    ALLOW IN    Anywhere                  
+       22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+       80/tcp (v6)                ALLOW IN    Anywhere (v6)             
+       443/tcp (v6)               ALLOW IN    Anywhere (v6)             
+
+       root@vagrant:~# 
    ```
    
