@@ -105,8 +105,9 @@
        root@vagrant:/etc/apache2/sites-available# cat 000-default.conf 
        <VirtualHost *:80>
        	ServerAdmin webmaster@localhost
-               DocumentRoot /var/www/html
-       
+        # DocumentRoot /var/www/html
+        Redirect permanent / https://127.0.0.1:4949
+
        	ErrorLog ${APACHE_LOG_DIR}/error.log
        	CustomLog ${APACHE_LOG_DIR}/access.log combined
        </VirtualHost>
