@@ -52,6 +52,7 @@
                     v.name = "apachevm"
                 end
                 config.vm.network "forwarded_port", guest: 80, host: 4848
+                config.vm.network "forwarded_port", guest: 443, host: 4949
                 config.vm.provision :shell, path: "setup.sh"
          end
         gendalf@pc01:~/vagrantdir$ 
@@ -96,6 +97,14 @@
         Common Name (e.g. server FQDN or YOUR name) []:Evgeniy
         Email Address []:fox_su18@mail.ru
         vagrant@vagrant:~$ 
+    ```
+    * Изменим конфигурацию `Apache2` по-умолчанию:
+    ```
+       vagrant@vagrant:/etc/apache2/sites-enabled$ vim  000-default.conf
+       
+    
+    
+    
     ```
     
     
