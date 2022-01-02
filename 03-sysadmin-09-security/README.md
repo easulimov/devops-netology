@@ -283,6 +283,38 @@
     
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.
     ### Решение
+    * Переименуем ранее сгенерированные ключи и создадим файл конфигурации:
+   ```
+       gendalf@pc01:~/.ssh$ mv id_rsa vagrantvm_rsa
+       gendalf@pc01:~/.ssh$ mv id_rsa.pub vagrantvm_rsa.pub
+       gendalf@pc01:~/.ssh$ mv id_rsa vagrantvm_rsa
+       gendalf@pc01:~/.ssh$ mv id_rsa.pub vagrantvm_rsa.pub
+       gendalf@pc01:~/.ssh$ vim config
+       gendalf@pc01:~/.ssh$ cat config
+       Host vagrantvm 
+            HostName 127.0.0.1
+            IdentityFile ~/.ssh/vagrantvm_rsa
+            User bart
+            Port 2222
+            StrictHostKeyChecking no
+            gendalf@pc01:~/.ssh$ ssh vagrantvm 
+            Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-80-generic x86_64)
+            
+             * Documentation:  https://help.ubuntu.com
+             * Management:     https://landscape.canonical.com
+             * Support:        https://ubuntu.com/advantage
+            
+              System information as of Sun 02 Jan 2022 02:51:22 PM UTC
+            
+              System load:  0.0               Processes:             137
+              Usage of /:   2.6% of 61.31GB   Users logged in:       1
+              Memory usage: 12%               IPv4 address for eth0: 10.0.2.15
+              Swap usage:   0%
+            ...
+
+            bart@vagrant:~$ 
+   
+   ```
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
     ### Решение
  ---
