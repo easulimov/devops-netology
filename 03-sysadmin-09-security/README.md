@@ -103,12 +103,12 @@
        root@vagrant:/etc/apache2/sites-available# vim 000-default.conf 
        root@vagrant:/etc/apache2/sites-available# cat 000-default.conf 
        <VirtualHost *:80>
-       	        ServerAdmin webmaster@localhost
-                # DocumentRoot /var/www/html
-                Redirect permanent / https://127.0.0.1:4949
+           ServerAdmin webmaster@localhost
+           # DocumentRoot /var/www/html
+           Redirect permanent / https://127.0.0.1:4949
 
-       	        ErrorLog ${APACHE_LOG_DIR}/error.log
-       	        CustomLog ${APACHE_LOG_DIR}/access.log combined
+           ErrorLog ${APACHE_LOG_DIR}/error.log
+       	   CustomLog ${APACHE_LOG_DIR}/access.log combined
        </VirtualHost>
        <IfModule mod_ssl.c>
                <VirtualHost _default_:443>
@@ -297,19 +297,19 @@
             User bart
             Port 2222
             StrictHostKeyChecking no
-            gendalf@pc01:~/.ssh$ ssh vagrantvm 
-            Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-80-generic x86_64)
+        gendalf@pc01:~/.ssh$ ssh vagrantvm 
+        Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-80-generic x86_64)
             
-             * Documentation:  https://help.ubuntu.com
-             * Management:     https://landscape.canonical.com
-             * Support:        https://ubuntu.com/advantage
+         * Documentation:  https://help.ubuntu.com
+         * Management:     https://landscape.canonical.com
+         * Support:        https://ubuntu.com/advantage
             
-              System information as of Sun 02 Jan 2022 02:51:22 PM UTC
+          System information as of Sun 02 Jan 2022 02:51:22 PM UTC
             
-              System load:  0.0               Processes:             137
-              Usage of /:   2.6% of 61.31GB   Users logged in:       1
-              Memory usage: 12%               IPv4 address for eth0: 10.0.2.15
-              Swap usage:   0%
+          System load:  0.0               Processes:             137
+          Usage of /:   2.6% of 61.31GB   Users logged in:       1
+          Memory usage: 12%               IPv4 address for eth0: 10.0.2.15
+          Swap usage:   0%
             ...
 
        bart@vagrant:~$ 
