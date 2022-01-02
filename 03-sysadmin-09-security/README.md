@@ -338,5 +338,32 @@
 ## Задание для самостоятельной отработки (необязательно к выполнению)
 
 8*. Просканируйте хост scanme.nmap.org. Какие сервисы запущены?
+   ### Решение
+   ```
+       root@vagrant:~# apt install -y nmap
+              ...
+              
+       root@vagrant:~# nmap -sV scanme.nmap.org
+       Starting Nmap 7.80 ( https://nmap.org ) at 2022-01-02 15:36 UTC
+       Nmap scan report for scanme.nmap.org (45.33.32.156)
+       Host is up (0.18s latency).
+       Other addresses for scanme.nmap.org (not scanned): 2600:3c01::f03c:91ff:fe18:bb2f
+       Not shown: 993 closed ports
+       PORT      STATE    SERVICE      VERSION
+       22/tcp    open     ssh          OpenSSH 6.6.1p1 Ubuntu 2ubuntu2.13 (Ubuntu Linux; protocol 2.0)
+       25/tcp    filtered smtp
+       80/tcp    open     http         Apache httpd 2.4.7 ((Ubuntu))
+       139/tcp   filtered netbios-ssn
+       445/tcp   filtered microsoft-ds
+       9929/tcp  open     nping-echo   Nping echo
+       31337/tcp open     tcpwrapped
+       Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+       
+       Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+       Nmap done: 1 IP address (1 host up) scanned in 27.28 seconds
+       root@vagrant:~# 
+
+   
+   ```
 
 9*. Установите и настройте фаервол ufw на web-сервер из задания 3. Откройте доступ снаружи только к портам 22,80,443
