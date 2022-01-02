@@ -403,7 +403,6 @@
        Firewall is active and enabled on system startup
 
        root@vagrant:~# ufw status verbose
-       root@vagrant:~# ufw status verbose
        Status: active
        Logging: on (low)
        Default: deny (incoming), allow (outgoing), disabled (routed)
