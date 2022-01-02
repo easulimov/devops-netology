@@ -5,6 +5,9 @@
 
 2. Установите Google authenticator на мобильный телефон. Настройте вход в Bitwarden акаунт через Google authenticator OTP.
     ### Решение
+    * Включение двухфакторной аутентификации в настройках профиля Bitwarden (Скриншот)[https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Bitwarden%20with%20GoogleAuth.png]
+    * Запрос ключа Google authenticator при попытке входа в личный кабинет Bitwarden (Скриншот)[https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Access%20with%20GoogleAuth%20code.png]
+    
 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.
     ### Решение
 4. Проверьте на TLS уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК ... и тому подобное).
