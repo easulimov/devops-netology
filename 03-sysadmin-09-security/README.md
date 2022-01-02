@@ -371,7 +371,7 @@
    * Задействуем политики по умолчанию:
    ```
        root@vagrant:~# ufw default deny incoming
-       root@vagrant:~#  ufw default allow outgoing
+       root@vagrant:~# ufw default allow outgoing
    ```
    * Разрешим трафик от loopback:
    ```
