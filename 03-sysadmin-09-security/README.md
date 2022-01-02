@@ -317,6 +317,23 @@
    ```
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
     ### Решение
+    * Запустим `tcpdump` на хосте и откроем несколько страниц в браузере:
+    ```  
+       root@pc01😎:~# tcpdump -c 100 -w test_100.pcap -i wlx9848273b728b
+       tcpdump: listening on wlx9848273b728b, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+       100 packets captured
+       274 packets received by filter
+       0 packets dropped by kernel
+       root@pc01😎:~# 
+    ```
+    * Установим `Wireshark` и откроем ранее полученный файл в формате `pcap`:
+    ```
+        root@pc01😎:~# apt install -y wireshark
+        root@pc01😎:~# wireshark -r test_100.pcap 
+ 
+    ```
+    * [Скриншот1](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Wireshark1.png)
+    * [Скриншот2](https://raw.githubusercontent.com/easulimov/devops-netology/main/03-sysadmin-09-security/img/Wireshark2.png)
  ---
 ## Задание для самостоятельной отработки (необязательно к выполнению)
 
