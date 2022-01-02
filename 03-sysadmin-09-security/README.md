@@ -17,8 +17,9 @@
         gendalf@pc01:~/vagrantdir/html$ vim index.html
         gendalf@pc01:~/vagrantdir/html$ 
         gendalf@pc01:~/vagrantdir/html$ 
-        gendalf@pc01:~/vagrantdir/html$ cat index.html
         gendalf@pc01:~/vagrantdir/html$ vim index.html
+        gendalf@pc01:~/vagrantdir/html$ cat index.html
+
         <!DOCTYPE html>
         <html> 
             <head>
