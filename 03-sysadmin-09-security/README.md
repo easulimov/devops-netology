@@ -312,7 +312,7 @@
               Swap usage:   0%
             ...
 
-            bart@vagrant:~$ 
+       bart@vagrant:~$ 
    
    ```
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
