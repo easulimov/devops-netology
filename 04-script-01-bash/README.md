@@ -76,6 +76,64 @@
 
 3. Необходимо написать скрипт, который проверяет доступность трёх IP: 192.168.0.1, 173.194.222.113, 87.250.250.242 по 80 порту и записывает результат в файл log. Проверять доступность необходимо пять раз для каждого узла.
  ### Решение:
+ ```
+     #!/usr/bin/env bash
+     declare -i attempts
+     addresses_ipv4=("192.168.0.1" "173.194.222.113" "87.250.250.242")
+      echo "Ports checking is started"
+         for address in ${addresses_ipv4[@]}
+         do
+     	     attempts=5
+             while (($attempts>0))
+             do
+     	         nc -z -v -w 5 $address 80  &>>log
+	         if [ $? != 0 ]
+                 then
+		     echo "$(date) ${address}:80 is unavailable" >> log
+		 else
+		     echo $(date) >> log
+          	 fi	    
+                 ((attempts-=1))
+            done
+        done
+      echo "Port checking is done"
+    root@vagrant:~# ./check_ip_port.sh 
+    Ports checking is started
+    Port checking is done
+    root@vagrant:~# cat log
+    nc: connect to 192.168.0.1 port 80 (tcp) timed out: Operation now in progress
+    Tue 04 Jan 2022 03:41:47 PM UTC 192.168.0.1:80 is unavailable
+    nc: connect to 192.168.0.1 port 80 (tcp) timed out: Operation now in progress
+    Tue 04 Jan 2022 03:41:52 PM UTC 192.168.0.1:80 is unavailable
+    nc: connect to 192.168.0.1 port 80 (tcp) timed out: Operation now in progress
+    Tue 04 Jan 2022 03:41:57 PM UTC 192.168.0.1:80 is unavailable
+    nc: connect to 192.168.0.1 port 80 (tcp) timed out: Operation now in progress
+    Tue 04 Jan 2022 03:42:02 PM UTC 192.168.0.1:80 is unavailable
+    nc: connect to 192.168.0.1 port 80 (tcp) timed out: Operation now in progress
+    Tue 04 Jan 2022 03:42:07 PM UTC 192.168.0.1:80 is unavailable
+    Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:07 PM UTC
+    Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:07 PM UTC
+    Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:07 PM UTC
+    Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:09 PM UTC
+    Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:09 PM UTC
+    Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:09 PM UTC
+    Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:09 PM UTC
+    Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:09 PM UTC
+    Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:09 PM UTC
+    Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+    Tue 04 Jan 2022 03:42:09 PM UTC
+    root@vagrant:~# 
+ 
+ ```
 
 4. Необходимо дописать скрипт из предыдущего задания так, чтобы он выполнялся до тех пор, пока один из узлов не окажется недоступным. Если любой из узлов недоступен - IP этого узла пишется в файл error, скрипт прерывается
   ### Решение:
