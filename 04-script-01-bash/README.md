@@ -169,3 +169,56 @@
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
 
 Мы хотим, чтобы у нас были красивые сообщения для коммитов в репозиторий. Для этого нужно написать локальный хук для git, который будет проверять, что сообщение в коммите содержит код текущего задания в квадратных скобках и количество символов в сообщении не превышает 30. Пример сообщения: \[04-script-01-bash\] сломал хук.
+### Решение:
+* Скрипт `commit-msg` в директории `/root/test_git_hook/.git/hooks`:
+```
+    #!/usr/bin/env bash
+    input_file=$1
+    first_line=`head -n1 $input_file`
+    length=${#first_line}
+    pattern="^\[04-script-01-bash\]*"
+    if ! [[ "$first_line" =~ $pattern && "$length"<30 ]]; then
+      echo "Bad commit message, see example(allows max 30 symbols in message): [04-script-01-bash] commit message"
+      exit 1
+    fi
+```
+* Проверим работу хука:
+```
+    root@vagrant:~/test_git_hook# git status
+    On branch master
+    Changes to be committed:
+      (use "git restore --staged <file>..." to unstage)
+        	modified:   test.txt
+        
+    root@vagrant:~/test_git_hook# git commit -m "[04-script-01-bash]"
+    [master d525ade] [04-script-01-bash]
+     1 file changed, 1 insertion(+)
+    root@vagrant:~/test_git_hook# git status
+    On branch master
+    nothing to commit, working tree clean
+    root@vagrant:~/test_git_hook# 
+```
+* Введем некорректное сообщение коммита, а затем исправим его:
+```
+    root@vagrant:~/test_git_hook# vim test.txt 
+    root@vagrant:~/test_git_hook# git add .
+    root@vagrant:~/test_git_hook# git commit -m "[04-script-01-bash] 1111111111111111"
+    Bad commit message, see example(allows max 30 symbols in message): [04-script-01-bash] commit message
+    root@vagrant:~/test_git_hook# git commit -m "[04-script-01-bash] clear commit"
+    Bad commit message, see example(allows max 30 symbols in message): [04-script-01-bash] commit message
+    root@vagrant:~/test_git_hook# git commit -m "[04-script-01-bash] clear"
+    [master 3a94b19] [04-script-01-bash] clear
+     1 file changed, 1 insertion(+), 1 deletion(-)
+    root@vagrant:~/test_git_hook# git status
+    On branch master
+    nothing to commit, working tree clean
+    root@vagrant:~/test_git_hook# 
+```
+* Посмотрим лог коммитов:
+```
+    root@vagrant:~/test_git_hook# git log --oneline
+    3a94b19 (HEAD -> master) [04-script-01-bash] clear
+    d525ade [04-script-01-bash]
+    13005b4 First Commit
+```
+* Применены те коммиты, сообщения которых попадают под условие в скрипте `commit-msg`. Коммит `13005b4 First Commit` не попадает под условие, но находится в этом списке, т.к. был применен до включения хука `commit-msg`, сразу после инициализации локального репозитория.
