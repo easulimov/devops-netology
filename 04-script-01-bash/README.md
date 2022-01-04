@@ -43,6 +43,37 @@
 	done
 	```
  ### Решение:
+ ```
+     root@vagrant:~# vim check_srv.sh 
+     root@vagrant:~# ./check_srv.sh 
+     curl: (7) Failed to connect to localhost port 4757: Connection refused
+     curl: (7) Failed to connect to localhost port 4757: Connection refused
+     curl: (7) Failed to connect to localhost port 4757: Connection refused
+     ^C
+     root@vagrant:~# cat curl.log 
+     
+     Tue 04 Jan 2022 01:12:25 PM UTC
+     Tue 04 Jan 2022 01:12:35 PM UTC
+     Tue 04 Jan 2022 01:12:45 PM UTC
+     root@vagrant:~# cat check_srv.sh | nl
+          1	#!/usr/bin/env bash
+          2	while ((1==1))
+          3	do
+          4	curl https://localhost:4757
+          5	if (($?!=0))
+          6	then
+          7	    date >> curl.log
+          8	    sleep 10
+          9	else
+         10	    echo "Service is available" $(date) >> curl.success.log	
+         11	    break
+         12	fi
+         13	done
+     root@vagrant:~# 
+
+ ```
+ * Исправления в скрипте: `строка 2` - добавлена вторая закрывающая скобка, `строка 2`- удалены все лишние пробелы внутри `$(( ))`, `строка 8` - добавлена команда `sleep 10`, чтобы выполнять проверки раз в 10 секунд (дисковое пространство будет сокращаться гораздо медленнее), `строка 11` - добавлен `breake` - чтобы прекратить проверки, когда сервис станет доступен.
+
 3. Необходимо написать скрипт, который проверяет доступность трёх IP: 192.168.0.1, 173.194.222.113, 87.250.250.242 по 80 порту и записывает результат в файл log. Проверять доступность необходимо пять раз для каждого узла.
  ### Решение:
 
