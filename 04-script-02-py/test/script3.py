@@ -31,7 +31,8 @@ def find_modified_files(dir_path):
         if result.find('изменено') != -1:
             status += 1
             prepare_result = result.replace('\tизменено:   ', '')
-            print(f"{dir_path}/{prepare_result}".replace(" ", ""))
+            final_result = (f"{dir_path}/{prepare_result}".replace(" ", "")).replace("//", "/")
+            print(final_result)
     if (status == 0):
         print(f"В репозитории по указанному пути {dir_path} - нет измененных файлов")
 
