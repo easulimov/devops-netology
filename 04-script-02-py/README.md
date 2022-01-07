@@ -47,6 +47,68 @@
 
 	```
    ### Решение
+   * Измененный скрипт:
+   ```
+       #!/usr/bin/env python3
+       
+       import os
+       
+       bash_command = ["cd ~/netology/sysadm-homeworks", "git status"]
+       result_os = os.popen(' && '.join(bash_command)).read()
+       
+       # Получаем полный путь рабочей директории (директория локального репозитория)
+       wd_path = os.path.expanduser("~/netology/sysadm-homeworks")
+       
+       # Не используемая переменная
+       # is_change = False
+       
+       for result in result_os.split('\n'):
+           if result.find('изменено') != -1:
+               prepare_result = result.replace('\tизменено:   ', '')
+	       
+       #       print(prepare_result)
+       
+       # Печатаем полный путь к файлу
+               print(f"{wd_path}/{prepare_result}".replace(" ", ""))
+       # Отключаем преждевременный выход
+       #        break
+   
+   ```
+   * Результат выполнения скрипта:
+   ```
+       gendalf@pc01:~/PycharmProjects/devops-netology/04-script-02-py/test$ ll
+       итого 16
+       drwxrwxr-x 2 gendalf gendalf 4096 янв  7 12:44 ./
+       drwxrwxr-x 3 gendalf gendalf 4096 янв  7 12:19 ../
+       -rw-rw-r-- 1 gendalf gendalf  188 янв  6 15:17 script1.py
+       -rwxrwxr-x 1 gendalf gendalf  808 янв  7 12:44 script2.py*
+       gendalf@pc01:~/PycharmProjects/devops-netology/04-script-02-py/test$ ./script2.py 
+       /home/gendalf/netology/sysadm-homeworks/1.txt
+       /home/gendalf/netology/sysadm-homeworks/2.txt
+       /home/gendalf/netology/sysadm-homeworks/3.txt
+       /home/gendalf/netology/sysadm-homeworks/internal_dir/22
+       /home/gendalf/netology/sysadm-homeworks/internal_dir/23
+       gendalf@pc01:~/PycharmProjects/devops-netology/04-script-02-py/test$ cd /home/gendalf/netology/sysadm-homeworks/
+       gendalf@pc01:~/netology/sysadm-homeworks$ git status
+       На ветке master
+       Изменения, которые будут включены в коммит:
+         (используйте «git restore --staged <файл>…», чтобы убрать из индекса)
+       	       изменено:      1.txt
+                      
+       Изменения, которые не в индексе для коммита:
+         (используйте «git add <файл>…», чтобы добавить файл в индекс)
+         (используйте «git restore <файл>…», чтобы отменить изменения в рабочем каталоге)
+	       изменено:      2.txt
+	       изменено:      3.txt
+	       изменено:      internal_dir/22
+	       изменено:      internal_dir/23
+
+       Неотслеживаемые файлы:
+         (используйте «git add <файл>…», чтобы добавить в то, что будет включено в коммит)
+	       4.txt
+       
+       gendalf@pc01:~/netology/sysadm-homeworks$ 
+   ```
 3. Доработать скрипт выше так, чтобы он мог проверять не только локальный репозиторий в текущей директории, а также умел воспринимать путь к репозиторию, который мы передаём как входной параметр. Мы точно знаем, что начальство коварное и будет проверять работу этого скрипта в директориях, которые не являются локальными репозиториями.
    ### Решение
 4. Наша команда разрабатывает несколько веб-сервисов, доступных по http. Мы точно знаем, что на их стенде нет никакой балансировки, кластеризации, за DNS прячется конкретный IP сервера, где установлен сервис. Проблема в том, что отдел, занимающийся нашей инфраструктурой очень часто меняет нам сервера, поэтому IP меняются примерно раз в неделю, при этом сервисы сохраняют за собой DNS имена. Это бы совсем никого не беспокоило, если бы несколько раз сервера не уезжали в такой сегмент сети нашей компании, который недоступен для разработчиков. Мы хотим написать скрипт, который опрашивает веб-сервисы, получает их IP, выводит информацию в стандартный вывод в виде: <URL сервиса> - <его IP>. Также, должна быть реализована возможность проверки текущего IP сервиса c его IP из предыдущей проверки. Если проверка будет провалена - оповестить об этом в стандартный вывод сообщением: [ERROR] <URL сервиса> IP mismatch: <старый IP> <Новый IP>. Будем считать, что наша разработка реализовала сервисы: drive.google.com, mail.google.com, google.com.
