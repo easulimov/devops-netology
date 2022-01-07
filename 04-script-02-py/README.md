@@ -113,60 +113,56 @@
    ### Решение
    * Измененный скрипт:
    ```python
-       #!/usr/bin/env python3
+        #!/usr/bin/env python3
+        
+        import os
+        from sys import argv
+        from sys import exit
+        
+        try:
+            repo_path = argv[1]
+        except IndexError:
+            print("Не указан путь к репозиторию")
+            exit(1)
 
-import os
-from sys import argv
-from sys import exit
-
-try:
-    repo_path = argv[1]
-except IndexError:
-    print("Не указан путь к репозиторию")
-    exit(1)
 
 
-
-def is_repo(dir_path):
-    bash_command = [f"cd {dir_path}", "git status 2>&1"]
-    result_os = os.popen(' && '.join(bash_command)).read()
-    status = True
-    for result in result_os.split('\n'):
-        if result.find('fatal') != -1:
-            status = False
+        def is_repo(dir_path):
+            bash_command = [f"cd {dir_path}", "git status 2>&1"]
+            result_os = os.popen(' && '.join(bash_command)).read()
+            status = True
+            for result in result_os.split('\n'):
+               if result.find('fatal') != -1:
+                    status = False
+                    return status
             return status
-    return status
+        
+        
+        def find_modified_files(dir_path):
+            bash_command = [f"cd {dir_path}", "git status"]
+            result_os = os.popen(' && '.join(bash_command)).read()
+            status = 0
+            for result in result_os.split('\n'):
+                if result.find('изменено') != -1:
+                    status += 1
+                    prepare_result = result.replace('\tизменено:   ', '')
+                    print(f"{dir_path}/{prepare_result}".replace(" ", ""))
+            if (status == 0):
+                print(f"В репозитории по указанному пути {dir_path} - нет измененных файлов")
+        
+        
+        
+        if repo_path.find("~/") != -1:
+            repo_path = os.path.expanduser(repo_path)
 
+        if os.path.exists(repo_path):
+            if is_repo(repo_path):
+                find_modified_files(repo_path)
+            else:
+                print(f" Указанный путь {repo_path} - не является репозиторием")
+        else:
+            print(f"Указанный путь {repo_path} - не существует")
 
-def find_modified_files(dir_path):
-    bash_command = [f"cd {dir_path}", "git status"]
-    result_os = os.popen(' && '.join(bash_command)).read()
-    status = 0
-    for result in result_os.split('\n'):
-        if result.find('изменено') != -1:
-            status += 1
-            prepare_result = result.replace('\tизменено:   ', '')
-            print(f"{dir_path}/{prepare_result}".replace(" ", ""))
-    if (status == 0):
-        print(f"В репозитории по указанному пути {dir_path} - нет измененных файлов")
-
-
-
-if repo_path.find("~/") != -1:
-    repo_path = os.path.expanduser(repo_path)
-
-if os.path.exists(repo_path):
-    if is_repo(repo_path):
-        find_modified_files(repo_path)
-    else:
-        print(f" Указанный путь {repo_path} - не является репозиторием")
-else:
-    print(f"Указанный путь {repo_path} - не существует")
-
-
-      
-      
-   
    ```
 4. Наша команда разрабатывает несколько веб-сервисов, доступных по http. Мы точно знаем, что на их стенде нет никакой балансировки, кластеризации, за DNS прячется конкретный IP сервера, где установлен сервис. Проблема в том, что отдел, занимающийся нашей инфраструктурой очень часто меняет нам сервера, поэтому IP меняются примерно раз в неделю, при этом сервисы сохраняют за собой DNS имена. Это бы совсем никого не беспокоило, если бы несколько раз сервера не уезжали в такой сегмент сети нашей компании, который недоступен для разработчиков. Мы хотим написать скрипт, который опрашивает веб-сервисы, получает их IP, выводит информацию в стандартный вывод в виде: <URL сервиса> - <его IP>. Также, должна быть реализована возможность проверки текущего IP сервиса c его IP из предыдущей проверки. Если проверка будет провалена - оповестить об этом в стандартный вывод сообщением: [ERROR] <URL сервиса> IP mismatch: <старый IP> <Новый IP>. Будем считать, что наша разработка реализовала сервисы: drive.google.com, mail.google.com, google.com.
    ### Решение
