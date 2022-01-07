@@ -13,8 +13,8 @@
     * Чтобы получить `12`:
     ```
         #!/usr/bin/env python3
-	    a = 1
-	    b = '2'
+	a = 1
+	b = '2'
         c = str(a) + b
         # c - строка
         print(c)
