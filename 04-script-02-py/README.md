@@ -75,7 +75,7 @@
    
    ```
    * Результат выполнения скрипта:
-   ```
+   ```git
        gendalf@pc01:~/PycharmProjects/devops-netology/04-script-02-py/test$ ll
        итого 16
        drwxrwxr-x 2 gendalf gendalf 4096 янв  7 12:44 ./
