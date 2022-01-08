@@ -86,6 +86,21 @@ with open('ip_addr.yml', 'w') as yaml_file:
     yaml.dump(ip_check, yaml_file)
 
   ```
+  * По результатам выполнения получено 2 файла:
+  ```
+      MacBook-Pro-admin:04-script-03-yaml admin$ cat ip_addr.json
+      {
+        "drive.google.com": "142.251.1.194",
+        "mail.google.com": "74.125.131.83",
+        "google.com": "173.194.222.139"
+      }MacBook-Pro-admin:04-script-03-yaml admin$ 
+      MacBook-Pro-admin:04-script-03-yaml admin$ cat ip_addr.yml
+      drive.google.com: 142.251.1.194
+      google.com: 173.194.222.139
+      mail.google.com: 74.125.131.83
+      MacBook-Pro-admin:04-script-03-yaml admin$ 
+  ```
+  
   
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
 
