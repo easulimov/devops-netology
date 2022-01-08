@@ -94,6 +94,7 @@ with open('ip_addr.yml', 'w') as yaml_file:
         "mail.google.com": "74.125.131.83",
         "google.com": "173.194.222.139"
       }MacBook-Pro-admin:04-script-03-yaml admin$ 
+      MacBook-Pro-admin:04-script-03-yaml admin$ 
       MacBook-Pro-admin:04-script-03-yaml admin$ cat ip_addr.yml
       drive.google.com: 142.251.1.194
       google.com: 173.194.222.139
