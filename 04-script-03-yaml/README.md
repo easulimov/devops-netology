@@ -114,7 +114,23 @@ URL <mail.google.com> - IP 173.194.73.17
 gendalf@pc01:~/PycharmProjects/devops-netology/04-script-03-yaml$ cat *.json
 
   ```
-  
+### json-файл(ы), который(е) записал ваш скрипт:
+```json
+{
+  "drive.google.com": "108.177.14.194",
+  "mail.google.com": "173.194.73.17",
+  "google.com": "74.125.131.138"
+}
+
+```
+
+### yml-файл(ы), который(е) записал ваш скрипт:
+```yaml
+drive.google.com: 108.177.14.194
+google.com: 74.125.131.138
+mail.google.com: 173.194.73.17
+
+```  
   
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
 
