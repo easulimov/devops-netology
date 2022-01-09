@@ -34,7 +34,7 @@
 
 
 ## Решение:
-1. Создание виртуальной машины Linux
+1. Создайте виртуальную машину Linux.
 ```
 gendalf@pc01:~$ mkdir course-work
 gendalf@pc01:~$ cd course-work/
@@ -72,4 +72,10 @@ Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-91-generic x86_64)
 This system is built by the Bento project by Chef Software
 More information can be found at https://github.com/chef/bento
 vagrant@vagrant:~$ 
+```
+
+2. Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
+```
+
+
 ```
