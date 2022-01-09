@@ -67,7 +67,6 @@ def print_changed_ip(previous_ip_check, ip_check):
             else:
                 print(f"URL <{key}> - IP {value} ")
 
-
 count = 5
 ip_check = get_ip(addresses)
 previous_ip_check = ip_check
@@ -75,17 +74,18 @@ while count != 0:
 # Для демонстрационных целей, количество проходов ограничено 5. Чтобы сделать выполнение адресов непрерывным
 # надо изменить условие while count != 0: на while True:
     print_changed_ip(previous_ip_check, ip_check)
+    with open("ip_addr.json", 'w') as json_file:
+        jd = json.dumps(ip_check, sort_keys=False, indent=2)
+        json_file.write(jd)
+
+    with open('ip_addr.yml', 'w') as yaml_file:
+        yaml.dump(ip_check, yaml_file, sort_keys=False)
+
     previous_ip_check = ip_check
     ip_check = get_ip(addresses)
     count -= 1
     time.sleep(5)
     print("-----------------------------------------")
-with open("ip_addr.json", 'w') as json_file:
-    jd = json.dumps(ip_check, indent=2)
-    json_file.write(jd)
-
-with open('ip_addr.yml', 'w') as yaml_file:
-    yaml.dump(ip_check, yaml_file)
 
   ```
 
@@ -93,34 +93,35 @@ with open('ip_addr.yml', 'w') as yaml_file:
   ```
 gendalf@pc01:~/PycharmProjects/devops-netology/04-script-03-yaml$ ./script.py 
 URL <drive.google.com> - IP 108.177.14.194 
-URL <mail.google.com> - IP 173.194.73.83 
-URL <google.com> - IP 74.125.131.138 
------------------------------------------
-URL <drive.google.com> - IP 108.177.14.194 
-[ERROR] <mail.google.com> IP mismatch: <173.194.73.83> <173.194.73.17>. 
-URL <google.com> - IP 74.125.131.138 
------------------------------------------
-URL <drive.google.com> - IP 108.177.14.194 
-[ERROR] <mail.google.com> IP mismatch: <173.194.73.17> <173.194.73.19>. 
-URL <google.com> - IP 74.125.131.138 
+URL <mail.google.com> - IP 173.194.73.19 
+URL <google.com> - IP 173.194.220.138 
 -----------------------------------------
 URL <drive.google.com> - IP 108.177.14.194 
 [ERROR] <mail.google.com> IP mismatch: <173.194.73.19> <173.194.73.17>. 
-URL <google.com> - IP 74.125.131.138 
+[ERROR] <google.com> IP mismatch: <173.194.220.138> <173.194.220.113>. 
 -----------------------------------------
 URL <drive.google.com> - IP 108.177.14.194 
-URL <mail.google.com> - IP 173.194.73.17 
-[ERROR] <google.com> IP mismatch: <74.125.131.138> <74.125.131.100>. 
+[ERROR] <mail.google.com> IP mismatch: <173.194.73.17> <173.194.73.18>. 
+URL <google.com> - IP 173.194.220.113 
 -----------------------------------------
-gendalf@pc01:~/PycharmProjects/devops-netology/04-script-03-yaml$ cat *.json
+URL <drive.google.com> - IP 108.177.14.194 
+[ERROR] <mail.google.com> IP mismatch: <173.194.73.18> <173.194.73.17>. 
+URL <google.com> - IP 173.194.220.113 
+-----------------------------------------
+URL <drive.google.com> - IP 108.177.14.194 
+[ERROR] <mail.google.com> IP mismatch: <173.194.73.17> <173.194.73.19>. 
+[ERROR] <google.com> IP mismatch: <173.194.220.113> <173.194.220.100>. 
+-----------------------------------------
+gendalf@pc01:~/PycharmProjects/devops-netology/04-script-03-yaml$ 
+
 
   ```
 ### json-файл(ы), который(е) записал ваш скрипт:
 ```json
 {
   "drive.google.com": "108.177.14.194",
-  "mail.google.com": "173.194.73.17",
-  "google.com": "74.125.131.138"
+  "mail.google.com": "173.194.73.19",
+  "google.com": "173.194.220.100"
 }
 
 ```
@@ -128,8 +129,8 @@ gendalf@pc01:~/PycharmProjects/devops-netology/04-script-03-yaml$ cat *.json
 ### yml-файл(ы), который(е) записал ваш скрипт:
 ```yaml
 drive.google.com: 108.177.14.194
-google.com: 74.125.131.138
-mail.google.com: 173.194.73.17
+mail.google.com: 173.194.73.19
+google.com: 173.194.220.100
 
 ```  
   
