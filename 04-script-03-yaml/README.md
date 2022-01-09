@@ -87,20 +87,32 @@ with open('ip_addr.yml', 'w') as yaml_file:
     yaml.dump(ip_check, yaml_file)
 
   ```
-  * По результатам выполнения получено 2 файла:
+
+  ### Вывод скрипта при запуске при тестировании:
   ```
-      MacBook-Pro-admin:04-script-03-yaml admin$ cat ip_addr.json
-      {
-        "drive.google.com": "142.251.1.194",
-        "mail.google.com": "74.125.131.83",
-        "google.com": "173.194.222.139"
-      }MacBook-Pro-admin:04-script-03-yaml admin$ 
-      MacBook-Pro-admin:04-script-03-yaml admin$ 
-      MacBook-Pro-admin:04-script-03-yaml admin$ cat ip_addr.yml
-      drive.google.com: 142.251.1.194
-      google.com: 173.194.222.139
-      mail.google.com: 74.125.131.83
-      MacBook-Pro-admin:04-script-03-yaml admin$ 
+gendalf@pc01:~/PycharmProjects/devops-netology/04-script-03-yaml$ ./script.py 
+URL <drive.google.com> - IP 108.177.14.194 
+URL <mail.google.com> - IP 173.194.73.83 
+URL <google.com> - IP 74.125.131.138 
+-----------------------------------------
+URL <drive.google.com> - IP 108.177.14.194 
+[ERROR] <mail.google.com> IP mismatch: <173.194.73.83> <173.194.73.17>. 
+URL <google.com> - IP 74.125.131.138 
+-----------------------------------------
+URL <drive.google.com> - IP 108.177.14.194 
+[ERROR] <mail.google.com> IP mismatch: <173.194.73.17> <173.194.73.19>. 
+URL <google.com> - IP 74.125.131.138 
+-----------------------------------------
+URL <drive.google.com> - IP 108.177.14.194 
+[ERROR] <mail.google.com> IP mismatch: <173.194.73.19> <173.194.73.17>. 
+URL <google.com> - IP 74.125.131.138 
+-----------------------------------------
+URL <drive.google.com> - IP 108.177.14.194 
+URL <mail.google.com> - IP 173.194.73.17 
+[ERROR] <google.com> IP mismatch: <74.125.131.138> <74.125.131.100>. 
+-----------------------------------------
+gendalf@pc01:~/PycharmProjects/devops-netology/04-script-03-yaml$ cat *.json
+
   ```
   
   
