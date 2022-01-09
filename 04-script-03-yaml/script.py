@@ -27,22 +27,22 @@ def print_changed_ip(previous_ip_check, ip_check):
                 print(f"URL <{key}> - IP {value} ")
 
 
-count = 5
+count = 2
 ip_check = get_ip(addresses)
 previous_ip_check = ip_check
 while count != 0:
 # Для демонстрационных целей, количество проходов ограничено 5. Чтобы сделать выполнение адресов непрерывным
 # надо изменить условие while count != 0: на while True:
     print_changed_ip(previous_ip_check, ip_check)
+    with open("ip_addr.json", 'w') as json_file:
+        jd = json.dumps(ip_check, sort_keys=False, indent=2)
+        json_file.write(jd)
+
+    with open('ip_addr.yml', 'w') as yaml_file:
+        yaml.dump(ip_check, yaml_file, sort_keys=False)
+
     previous_ip_check = ip_check
     ip_check = get_ip(addresses)
     count -= 1
     time.sleep(5)
     print("-----------------------------------------")
-    with open("ip_addr.json", 'w') as json_file:
-        jd = json.dumps(ip_check, indent=2)
-        json_file.write(jd)
-
-    with open('ip_addr.yml', 'w') as yaml_file:
-        yaml.dump(ip_check, yaml_file)
-
