@@ -36,7 +36,40 @@
 ## Решение:
 1. Создание виртуальной машины Linux
 ```
+gendalf@pc01:~$ mkdir course-work
+gendalf@pc01:~$ cd course-work/
+gendalf@pc01:~/course-work$ vim Vagrantfile 
+gendalf@pc01:~/course-work$ cat Vagrantfile 
+ Vagrant.configure("2") do |config|
+ 	config.vm.box = "bento/ubuntu-20.04"
+        config.vm.provider "virtualbox" do |v|  
+            v.memory = 2048
+            v.cpus = 2
+            v.name = "testvm"
+        end
+        config.vm.network "forwarded_port", guest: 80, host: 4848
+        config.vm.network "forwarded_port", guest: 443, host: 4949
+ end
+gendalf@pc01:~/course-work$ vagrant init
+...
+gendalf@pc01:~/course-work$ vagrant up
+...
+gendalf@pc01:~/course-work$ vagrant ssh
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-91-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sun 09 Jan 2022 12:28:45 PM UTC
+
+  System load:  0.02               Processes:             130
+  Usage of /:   11.6% of 30.88GB   Users logged in:       0
+  Memory usage: 10%                IPv4 address for eth0: 10.0.2.15
+  Swap usage:   0%
 
 
-
+This system is built by the Bento project by Chef Software
+More information can be found at https://github.com/chef/bento
+vagrant@vagrant:~$ 
 ```
