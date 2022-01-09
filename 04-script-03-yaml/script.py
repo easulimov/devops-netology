@@ -27,7 +27,7 @@ def print_changed_ip(previous_ip_check, ip_check):
                 print(f"URL <{key}> - IP {value} ")
 
 
-count = 1
+count = 5
 ip_check = get_ip(addresses)
 previous_ip_check = ip_check
 while count != 0:
