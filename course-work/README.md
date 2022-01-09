@@ -41,13 +41,12 @@ gendalf@pc01:~$ cd course-work/
 gendalf@pc01:~/course-work$ vim Vagrantfile 
 gendalf@pc01:~/course-work$ cat Vagrantfile 
  Vagrant.configure("2") do |config|
- 	config.vm.box = "bento/ubuntu-20.04"
-        config.vm.provider "virtualbox" do |v|  
+        config.vm.box = "bento/ubuntu-20.04"
+        config.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 2
             v.name = "testvm"
         end
-        config.vm.network "forwarded_port", guest: 80, host: 4848
         config.vm.network "forwarded_port", guest: 443, host: 4949
  end
 gendalf@pc01:~/course-work$ vagrant init
@@ -75,6 +74,52 @@ vagrant@vagrant:~$
 ```
 
 2. Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
+*  ufw
+```
+vagrant@vagrant:~$ sudo -i
+root@vagrant:~# ufw status
+Status: inactive
+root@vagrant:~# 
+root@vagrant:~# 
+root@vagrant:~# ufw allow from 127.0.0.0/8
+Rules updated
+root@vagrant:~# ufw allow 22/tcp
+Rules updated
+Rules updated (v6)
+root@vagrant:~# ufw allow 443/tcp
+Rules updated
+Rules updated (v6)
+root@vagrant:~# ufw default deny incoming
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+root@vagrant:~# 
+root@vagrant:~# 
+root@vagrant:~# ufw default allow outgoing
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+root@vagrant:~# 
+root@vagrant:~# 
+root@vagrant:~# ufw enable
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? Y
+Firewall is active and enabled on system startup
+root@vagrant:~# 
+root@vagrant:~# ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+Anywhere                   ALLOW IN    127.0.0.0/8               
+22/tcp                     ALLOW IN    Anywhere                  
+443/tcp                    ALLOW IN    Anywhere                  
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+443/tcp (v6)               ALLOW IN    Anywhere (v6)             
+
+root@vagrant:~# 
+```
+3. Установите hashicorp vault ([инструкция по ссылке](https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started#install-vault)).
 ```
 
 
