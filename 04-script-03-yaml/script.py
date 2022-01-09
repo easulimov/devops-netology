@@ -46,5 +46,3 @@ with open("ip_addr.json", 'w') as json_file:
 with open('ip_addr.yml', 'w') as yaml_file:
     yaml.dump(ip_check, yaml_file)
 
-
-
