@@ -39,10 +39,10 @@ while count != 0:
     count -= 1
     time.sleep(5)
     print("-----------------------------------------")
-with open("ip_addr.json", 'w') as json_file:
-    jd = json.dumps(ip_check, indent=2)
-    json_file.write(jd)
+    with open("ip_addr.json", 'w') as json_file:
+        jd = json.dumps(ip_check, indent=2)
+        json_file.write(jd)
 
-with open('ip_addr.yml', 'w') as yaml_file:
-    yaml.dump(ip_check, yaml_file)
+    with open('ip_addr.yml', 'w') as yaml_file:
+        yaml.dump(ip_check, yaml_file)
 
