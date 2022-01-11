@@ -129,6 +129,8 @@ root@vagrant:~# sudo apt-get update && sudo apt-get install vault
 ...
 root@vagrant:~# which vault
 /usr/bin/vault
+root@vagrant:~# vault --version
+Vault v1.9.2 (f4c6d873e2767c0d6853b5d9ffc77b0d297bfbdf)
 root@vagrant:~# 
 ```
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
