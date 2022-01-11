@@ -121,6 +121,15 @@ root@vagrant:~#
 ```
 3. Установите hashicorp vault ([инструкция по ссылке](https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started#install-vault)).
 ```
-
-
+root@vagrant:~# curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+OK
+root@vagrant:~# sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+...
+root@vagrant:~# sudo apt-get update && sudo apt-get install vault
+...
+root@vagrant:~# which vault
+/usr/bin/vault
+root@vagrant:~# 
 ```
+4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
+5. 
