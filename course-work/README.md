@@ -132,6 +132,39 @@ root@vagrant:~# which vault
 root@vagrant:~# vault --version
 Vault v1.9.2 (f4c6d873e2767c0d6853b5d9ffc77b0d297bfbdf)
 root@vagrant:~# 
+root@vagrant:~# 
+root@vagrant:~# vim /etc/vault.d/vault.hcl 
+root@vagrant:~# cat /etc/vault.d/vault.hcl 
+ui = true
+
+storage "file" {
+  path = "/opt/vault/data"
+}
+
+
+# HTTPS listener
+listener "tcp" {
+  address       = "127.0.0.1:8200"
+  tls_cert_file = "/opt/vault/tls/tls.crt"
+  tls_key_file  = "/opt/vault/tls/tls.key"
+}
+root@vagrant:~# 
+root@vagrant:~# 
+root@vagrant:~# systemctl enable vault --now
+root@vagrant:~# systemctl is-enabled vault.service
+enabled
+root@vagrant:~# systemctl status vault.service
+● vault.service - "HashiCorp Vault - A tool for managing secrets"
+     Loaded: loaded (/lib/systemd/system/vault.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2022-01-12 15:05:51 UTC; 38s ago
+       Docs: https://www.vaultproject.io/docs/
+   Main PID: 4302 (vault)
+      Tasks: 8 (limit: 2279)
+     Memory: 58.2M
+     CGroup: /system.slice/vault.service
+             └─4302 /usr/bin/vault server -config=/etc/vault.d/vault.hcl
+...
+root@vagrant:~# 
 ```
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 5. 
