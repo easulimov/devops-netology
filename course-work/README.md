@@ -120,6 +120,7 @@ Anywhere                   ALLOW IN    127.0.0.0/8
 root@vagrant:~# 
 ```
 3. Установите hashicorp vault ([инструкция по ссылке](https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started#install-vault)).
+* Установка Vault
 ```
 root@vagrant:~# curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 OK
@@ -165,6 +166,51 @@ root@vagrant:~# systemctl status vault.service
              └─4302 /usr/bin/vault server -config=/etc/vault.d/vault.hcl
 ...
 root@vagrant:~# 
+```
+* Настройка самоподписного сертификата для Vault (для использования TLS)
+```
+root@vagrant:/opt/vault/tls# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /opt/vault/tls/selfsigned_vault.key -out /opt/vault/tls/selfsigned_vault.cert
+Generating a RSA private key
+............+++++
+..........................................+++++
+writing new private key to '/opt/vault/tls/selfsigned_vault.key'
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:Russia
+string is too long, it needs to be no more than 2 bytes long
+Country Name (2 letter code) [AU]:RU
+State or Province Name (full name) [Some-State]:Moscow
+Locality Name (eg, city) []:Moscow
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:test.local
+Organizational Unit Name (eg, section) []:
+Common Name (e.g. server FQDN or YOUR name) []:Evgeniy
+Email Address []:fox_su18@mail.ru
+root@vagrant:/opt/vault/tls# ll
+total 24
+drwx------ 2 vault vault 4096 Jan 13 09:41 ./
+drwxr-xr-x 4 vault vault 4096 Jan 11 10:45 ../
+-rw-r--r-- 1 root  root  1383 Jan 13 09:41 selfsigned_vault.cert
+-rw------- 1 root  root  1704 Jan 13 09:40 selfsigned_vault.key
+-rw------- 1 vault vault 1850 Jan 11 10:45 tls.crt
+-rw------- 1 vault vault 3272 Jan 11 10:45 tls.key
+root@vagrant:/opt/vault/tls# chmod go-r selfsigned_vault.*
+root@vagrant:/opt/vault/tls# 
+root@vagrant:/opt/vault/tls# ls -lahF
+total 24K
+drwx------ 2 vault vault 4.0K Jan 13 09:41 ./
+drwxr-xr-x 4 vault vault 4.0K Jan 11 10:45 ../
+-rw------- 1 root  root  1.4K Jan 13 09:41 selfsigned_vault.cert
+-rw------- 1 root  root  1.7K Jan 13 09:40 selfsigned_vault.key
+-rw------- 1 vault vault 1.9K Jan 11 10:45 tls.crt
+-rw------- 1 vault vault 3.2K Jan 11 10:45 tls.key
+root@vagrant:/opt/vault/tls# 
+
 ```
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 5. 
