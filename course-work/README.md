@@ -728,6 +728,7 @@ gendalf@pc01:~$
 6. Установите nginx
 
 ## Решение:
+* Установка nginx
 ```
 root@testsrv:~/test.local.PKI# apt install gnupg2 ca-certificates lsb-release ubuntu-keyring
 Reading package lists... Done
@@ -790,8 +791,71 @@ Setting up nginx (1.20.2-1~focal) ...
 Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /lib/systemd/system/nginx.service.
 Processing triggers for man-db (2.9.1-1) ...
 Processing triggers for systemd (245.4-4ubuntu3.13) ...
-root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI#
+root@testsrv:~/test.local.PKI#
+root@testsrv:~/test.local.PKI# systemctl enable nginx --now
+Synchronizing state of nginx.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable nginx
+root@testsrv:~/test.local.PKI# systemctl status nginx
+● nginx.service - nginx - high performance web server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2022-01-19 12:16:32 UTC; 4s ago
+       Docs: https://nginx.org/en/docs/
+    Process: 18446 ExecStart=/usr/sbin/nginx -c /etc/nginx/nginx.conf (code=exited, status=0/SUCCESS)
+   Main PID: 18458 (nginx)
+      Tasks: 3 (limit: 2279)
+     Memory: 2.7M
+     CGroup: /system.slice/nginx.service
+             ├─18458 nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx.conf
+             ├─18459 nginx: worker process
+             └─18460 nginx: worker process
 
+Jan 19 12:16:32 testsrv systemd[1]: Starting nginx - high performance web server...
+Jan 19 12:16:32 testsrv systemd[1]: Started nginx - high performance web server.
+root@testsrv:~/test.local.PKI# 
+```
+
+7. По инструкции ([ссылка](https://nginx.org/en/docs/http/configuring_https_servers.html)) настройте nginx на https, используя ранее подготовленный сертификат:
+  - можно использовать стандартную стартовую страницу nginx для демонстрации работы сервера;
+  - можно использовать и другой html файл, сделанный вами;
+ ## Решение
+ * Создание и проверка файла конфигурации nginx
+ ```
+root@testsrv:~# cd /etc/nginx/conf.d/
+root@testsrv:/etc/nginx/conf.d# vim testsrv.test.local.conf
+root@testsrv:/etc/nginx/conf.d# cat testsrv.test.local.conf 
+server {
+
+    listen 443 default_server ssl;
+
+    server_name testsrv.test.local 127.0.0.1;
+
+    ssl_certificate /etc/nginx/ssl/testsrv.test.local.crt;
+    ssl_certificate_key /etc/nginx/ssl/testsrv.test.local.key;
+
+
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    keepalive_timeout 70;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+
+}
+root@testsrv:/etc/nginx/conf.d# nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@testsrv:/etc/nginx/conf.d# 
+```
+
+* Проверка файла конфигурации nginx прошла успешно. Можно перезапустить nginx
+```
 
 ```
 
