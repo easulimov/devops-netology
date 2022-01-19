@@ -39,7 +39,7 @@
 1. Создайте виртуальную машину Linux.
 
 ### Решение:
-```bash
+```
 gendalf@pc01:~$ mkdir course-work
 gendalf@pc01:~$ cd course-work/
 gendalf@pc01:~/course-work$ vim Vagrantfile 
