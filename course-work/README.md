@@ -45,9 +45,9 @@ gendalf@pc01:~/course-work$ cat Vagrantfile
         config.vm.provider "virtualbox" do |v|
             v.memory = 2048
             v.cpus = 2
-            v.name = "testvm"
+            v.name = "testsrv"
         end
-        config.vm.network "forwarded_port", guest: 443, host: 4949
+        config.vm.network "forwarded_port", guest: 443, host: 4443
  end
 gendalf@pc01:~/course-work$ vagrant init
 ...
@@ -71,39 +71,85 @@ Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-91-generic x86_64)
 This system is built by the Bento project by Chef Software
 More information can be found at https://github.com/chef/bento
 vagrant@vagrant:~$ 
+vagrant@vagrant:~$ sudo -i
+root@vagrant:~# apt update
+...
+...
+Reading state information... Done
+14 packages can be upgraded. Run 'apt list --upgradable' to see them.
+root@vagrant:~# 
+root@vagrant:~# apt install -y wget curl jq
+Reading package lists... Done
+...
+...
+root@vagrant:~# which jq && which curl && which wget
+/usr/bin/jq
+/usr/bin/curl
+/usr/bin/wget
+root@vagrant:~# 
+root@vagrant:~# vim /etc/hosts
+127.0.0.1 testsrv.test.local testsrv localhost
+
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+root@vagrant:~# 
+root@vagrant:~# hostnamectl set-hostname testsrv
+root@vagrant:~# hostnamectl
+   Static hostname: testsrv
+         Icon name: computer-vm
+           Chassis: vm
+        Machine ID: 1929d6537abe4ead8816d28b18da5905
+           Boot ID: 299bf1058a50490499bca295c128da49
+    Virtualization: oracle
+  Operating System: Ubuntu 20.04.3 LTS
+            Kernel: Linux 5.4.0-91-generic
+      Architecture: x86-64
+root@vagrant:~# 
+root@vagrant:~# exit
+logout
+vagrant@vagrant:~$ exit
+logout
+Connection to 127.0.0.1 closed.
+gendalf@pc01:~/course-work$ vagrant ssh
+...
 ```
 
 2. Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
 *  ufw
 ```
-vagrant@vagrant:~$ sudo -i
-root@vagrant:~# ufw status
+vagrant@testsrv:~$ sudo -i
+root@testsrv:~# ufw status
 Status: inactive
-root@vagrant:~# 
-root@vagrant:~# 
-root@vagrant:~# ufw allow from 127.0.0.0/8
+root@testsrv:~# 
+root@testsrv:~# ufw allow from 127.0.0.0/8
 Rules updated
-root@vagrant:~# ufw allow 22/tcp
-Rules updated
-Rules updated (v6)
-root@vagrant:~# ufw allow 443/tcp
+root@testsrv:~# ufw allow 22/tcp
 Rules updated
 Rules updated (v6)
-root@vagrant:~# ufw default deny incoming
+root@testsrv:~# ufw allow 443/tcp
+Rules updated
+Rules updated (v6)
+root@testsrv:~# ufw default deny incoming
 Default incoming policy changed to 'deny'
 (be sure to update your rules accordingly)
-root@vagrant:~# 
-root@vagrant:~# 
-root@vagrant:~# ufw default allow outgoing
+root@testsrv:~# 
+root@testsrv:~# 
+root@testsrv:~# ufw default allow outgoing
 Default outgoing policy changed to 'allow'
 (be sure to update your rules accordingly)
-root@vagrant:~# 
-root@vagrant:~# 
-root@vagrant:~# ufw enable
-Command may disrupt existing ssh connections. Proceed with operation (y|n)? Y
+root@testsrv:~# 
+root@testsrv:~# 
+root@testsrv:~# 
+root@testsrv:~# ufw enable
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
 Firewall is active and enabled on system startup
-root@vagrant:~# 
-root@vagrant:~# ufw status verbose
+root@testsrv:~# 
+root@testsrv:~# ufw status verbose
 Status: active
 Logging: on (low)
 Default: deny (incoming), allow (outgoing), disabled (routed)
@@ -117,100 +163,172 @@ Anywhere                   ALLOW IN    127.0.0.0/8
 22/tcp (v6)                ALLOW IN    Anywhere (v6)             
 443/tcp (v6)               ALLOW IN    Anywhere (v6)             
 
-root@vagrant:~# 
+root@testsrv:~# 
+
 ```
 3. Установите hashicorp vault ([инструкция по ссылке](https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started#install-vault)).
 * Установка Vault
 ```
-root@vagrant:~# curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+root@testsrv:~# curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 OK
-root@vagrant:~# sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+root@testsrv:~# sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 ...
-root@vagrant:~# sudo apt-get update && sudo apt-get install vault
 ...
-root@vagrant:~# which vault
-/usr/bin/vault
-root@vagrant:~# vault --version
+...
+The following NEW packages will be installed:
+  vault
+0 upgraded, 1 newly installed, 0 to remove and 14 not upgraded.
+Need to get 69.4 MB of archives.
+After this operation, 188 MB of additional disk space will be used.
+Get:1 https://apt.releases.hashicorp.com focal/main amd64 vault amd64 1.9.2 [69.4 MB]
+Fetched 69.4 MB in 10s (6,804 kB/s)                                           
+Selecting previously unselected package vault.
+(Reading database ... 40637 files and directories currently installed.)
+Preparing to unpack .../archives/vault_1.9.2_amd64.deb ...
+Unpacking vault (1.9.2) ...
+Setting up vault (1.9.2) ...
+Generating Vault TLS key and self-signed certificate...
+Generating a RSA private key
+...................................................................................................................................................................................................................................................................++++
+................................................................................++++
+writing new private key to 'tls.key'
+-----
+Vault TLS key and self-signed certificate have been generated in '/opt/vault/tls'.
+root@testsrv:~# 
+root@testsrv:~# vault --version
 Vault v1.9.2 (f4c6d873e2767c0d6853b5d9ffc77b0d297bfbdf)
-root@vagrant:~# 
-root@vagrant:~# 
-root@vagrant:~# vim /etc/vault.d/vault.hcl 
-root@vagrant:~# cat /etc/vault.d/vault.hcl 
+root@testsrv:~# 
+
+```
+* Настройка самоподписного сертификата для Vault (для использования TLS)
+```
+root@testsrv:/opt/vault/tls# vim /tmp/san.cnf
+root@testsrv:/opt/vault/tls# cat /tmp/san.cnf
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+[req_distinguished_name]
+C = RU
+ST = Moscow
+L = Moscow
+CN = Vault
+[v3_req]
+keyUsage = keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost
+DNS.2 = testsrv
+DNS.3 = testsrv.test.local
+IP.1 = 127.0.0.1
+root@testsrv:/opt/vault/tls# 
+root@testsrv:/opt/vault/tls# 
+root@testsrv:/opt/vault/tls# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /opt/vault/tls/selfsigned.key -out /opt/vault/tls/selfsigned.crt -config /tmp/san.cnf
+Generating a RSA private key
+...............................................+++++
+..............................................................+++++
+writing new private key to '/opt/vault/tls/selfsigned.key'
+-----
+root@testsrv:/opt/vault/tls#
+root@testsrv:/opt/vault/tls#
+root@testsrv:/opt/vault/tls# ll
+total 24
+drwx------ 2 vault vault 4096 Jan 19 09:49 ./
+drwxr-xr-x 4 vault vault 4096 Jan 19 09:39 ../
+-rw-r--r-- 1 root  root  1245 Jan 19 09:49 selfsigned.crt
+-rw------- 1 root  root  1704 Jan 19 09:49 selfsigned.key
+-rw------- 1 vault vault 1850 Jan 19 09:39 tls.crt
+-rw------- 1 vault vault 3272 Jan 19 09:39 tls.key
+root@testsrv:/opt/vault/tls# 
+root@testsrv:/opt/vault/tls# 
+root@testsrv:/opt/vault/tls# chown vault:vault selfsigned.*
+root@testsrv:/opt/vault/tls# ll selfsigned.*
+-rw-r--r-- 1 vault vault 1245 Jan 19 09:49 selfsigned.crt
+-rw------- 1 vault vault 1704 Jan 19 09:49 selfsigned.key
+root@testsrv:/opt/vault/tls# 
+```
+* Для успешной работы службы vault, ранее созданный самоподписной сертификат selfsigned.crt требуется зарегистрировать в хранилище сертификатов ОС
+```
+root@testsrv:/opt/vault/tls# cp selfsigned.crt /usr/local/share/ca-certificates/
+root@testsrv:/opt/vault/tls# ls -la /usr/local/share/ca-certificates/
+total 12
+drwxr-xr-x 2 root root 4096 Jan 19 10:05 .
+drwxr-xr-x 4 root root 4096 Aug 24 08:43 ..
+-rw-r--r-- 1 root root 1245 Jan 19 10:05 selfsigned.crt
+root@testsrv:/opt/vault/tls# update-ca-certificates
+Updating certificates in /etc/ssl/certs...
+1 added, 0 removed; done.
+Running hooks in /etc/ca-certificates/update.d...
+done.
+root@testsrv:/opt/vault/tls# 
+```
+* Настройка файла конфигурации vault.hcl для работы по https
+```
+root@testsrv:/opt/vault/tls# cd /etc/vault.d/
+root@testsrv:/etc/vault.d# vim vault.hcl 
+root@testsrv:/etc/vault.d# cat vault.hcl 
 ui = true
+
 
 storage "file" {
   path = "/opt/vault/data"
 }
 
+# HTTP listener
+#listener "tcp" {
+#  address = "127.0.0.1:8200"
+#  tls_disable = 1
+#}
 
 # HTTPS listener
 listener "tcp" {
   address       = "127.0.0.1:8200"
-  tls_cert_file = "/opt/vault/tls/tls.crt"
-  tls_key_file  = "/opt/vault/tls/tls.key"
+  tls_cert_file = "/opt/vault/tls/selfsigned.crt"
+  tls_key_file  = "/opt/vault/tls/selfsigned.key"
 }
-root@vagrant:~# 
-root@vagrant:~# 
-root@vagrant:~# systemctl enable vault --now
-root@vagrant:~# systemctl is-enabled vault.service
-enabled
-root@vagrant:~# systemctl status vault.service
+
+api_addr = "https://127.0.0.1:8200"
+
+root@testsrv:/etc/vault.d# 
+root@testsrv:/etc/vault.d# 
+```
+* Экспорт переменной VAULT_ADDR и запуск службы vault.service
+```
+root@testsrv:/etc/vault.d# export VAULT_ADDR=https://127.0.0.1:8200
+root@testsrv:/etc/vault.d# vim /etc/environment 
+root@testsrv:/etc/vault.d# cat /etc/environment 
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+export VAULT_ADDR=https://127.0.0.1:8200
+root@testsrv:/etc/vault.d# 
+root@testsrv:/etc/vault.d# 
+root@testsrv:/etc/vault.d# systemctl enable vault --now
+root@testsrv:/etc/vault.d# systemctl enable vault --now
+Created symlink /etc/systemd/system/multi-user.target.wants/vault.service → /lib/systemd/system/vault.service.
+root@testsrv:/etc/vault.d# 
+root@testsrv:/etc/vault.d# systemctl status vault --now
 ● vault.service - "HashiCorp Vault - A tool for managing secrets"
      Loaded: loaded (/lib/systemd/system/vault.service; enabled; vendor preset: enabled)
-     Active: active (running) since Wed 2022-01-12 15:05:51 UTC; 38s ago
+     Active: active (running) since Wed 2022-01-19 10:11:43 UTC; 11s ago
        Docs: https://www.vaultproject.io/docs/
-   Main PID: 4302 (vault)
-      Tasks: 8 (limit: 2279)
-     Memory: 58.2M
+   Main PID: 16942 (vault)
+      Tasks: 9 (limit: 2279)
+     Memory: 58.3M
      CGroup: /system.slice/vault.service
-             └─4302 /usr/bin/vault server -config=/etc/vault.d/vault.hcl
-...
-root@vagrant:~# 
-```
-* Настройка самоподписного сертификата для Vault (для использования TLS)
-```
-root@vagrant:/opt/vault/tls# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /opt/vault/tls/selfsigned_vault.key -out /opt/vault/tls/selfsigned_vault.cert
-Generating a RSA private key
-............+++++
-..........................................+++++
-writing new private key to '/opt/vault/tls/selfsigned_vault.key'
------
-You are about to be asked to enter information that will be incorporated
-into your certificate request.
-What you are about to enter is what is called a Distinguished Name or a DN.
-There are quite a few fields but you can leave some blank
-For some fields there will be a default value,
-If you enter '.', the field will be left blank.
------
-Country Name (2 letter code) [AU]:Russia
-string is too long, it needs to be no more than 2 bytes long
-Country Name (2 letter code) [AU]:RU
-State or Province Name (full name) [Some-State]:Moscow
-Locality Name (eg, city) []:Moscow
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:test.local
-Organizational Unit Name (eg, section) []:
-Common Name (e.g. server FQDN or YOUR name) []:Evgeniy
-Email Address []:fox_su18@mail.ru
-root@vagrant:/opt/vault/tls# ll
-total 24
-drwx------ 2 vault vault 4096 Jan 13 09:41 ./
-drwxr-xr-x 4 vault vault 4096 Jan 11 10:45 ../
--rw-r--r-- 1 root  root  1383 Jan 13 09:41 selfsigned_vault.cert
--rw------- 1 root  root  1704 Jan 13 09:40 selfsigned_vault.key
--rw------- 1 vault vault 1850 Jan 11 10:45 tls.crt
--rw------- 1 vault vault 3272 Jan 11 10:45 tls.key
-root@vagrant:/opt/vault/tls# chmod go-r selfsigned_vault.*
-root@vagrant:/opt/vault/tls# 
-root@vagrant:/opt/vault/tls# ls -lahF
-total 24K
-drwx------ 2 vault vault 4.0K Jan 13 09:41 ./
-drwxr-xr-x 4 vault vault 4.0K Jan 11 10:45 ../
--rw------- 1 root  root  1.4K Jan 13 09:41 selfsigned_vault.cert
--rw------- 1 root  root  1.7K Jan 13 09:40 selfsigned_vault.key
--rw------- 1 vault vault 1.9K Jan 11 10:45 tls.crt
--rw------- 1 vault vault 3.2K Jan 11 10:45 tls.key
-root@vagrant:/opt/vault/tls# 
+             └─16942 /usr/bin/vault server -config=/etc/vault.d/vault.hcl
 
+Jan 19 10:11:43 testsrv vault[16942]:               Listener 1: tcp (addr: "127.0.0.1:8200", cluster address: "127.0.0.1:8201", max_request_duration: "1m30s", max_request_size: "33554432", tls: "enabled")
+Jan 19 10:11:43 testsrv vault[16942]:                Log Level: info
+Jan 19 10:11:43 testsrv vault[16942]:                    Mlock: supported: true, enabled: true
+Jan 19 10:11:43 testsrv vault[16942]:            Recovery Mode: false
+Jan 19 10:11:43 testsrv vault[16942]:                  Storage: file
+Jan 19 10:11:43 testsrv vault[16942]:                  Version: Vault v1.9.2
+Jan 19 10:11:43 testsrv vault[16942]:              Version Sha: f4c6d873e2767c0d6853b5d9ffc77b0d297bfbdf
+Jan 19 10:11:43 testsrv vault[16942]: ==> Vault server started! Log data will stream in below:
+Jan 19 10:11:43 testsrv vault[16942]: 2022-01-19T10:11:43.159Z [INFO]  proxy environment: http_proxy="\"\"" https_proxy="\"\"" no_proxy="\"\""
+Jan 19 10:11:43 testsrv vault[16942]: 2022-01-19T10:11:43.177Z [INFO]  core: Initializing VersionTimestamps for core
+root@testsrv:/etc/vault.d# 
 ```
+* 
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 5. 
