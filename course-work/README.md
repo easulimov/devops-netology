@@ -33,7 +33,8 @@
 - Crontab работает (выберите число и время так, чтобы показать что crontab запускается и делает что надо)
 
 
-## Решение:
+   ### Решение:
+
 1. Создайте виртуальную машину Linux.
 ```
 gendalf@pc01:~$ mkdir course-work
@@ -119,9 +120,15 @@ gendalf@pc01:~/course-work$ vagrant ssh
 ...
 ```
 
+
+######################################################################################
+
+
+
+
 2. Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
 
-## Решение:
+   ### Решение:
 *  Настройка ufw
 ```
 vagrant@testsrv:~$ sudo -i
@@ -169,9 +176,16 @@ root@testsrv:~#
 
 ```
 
+
+
+######################################################################################
+
+
+
+
 3. Установите hashicorp vault ([инструкция по ссылке](https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started#install-vault)).
 
-## Решение:
+  ### Решение:
 * Установка Vault
 ```
 root@testsrv:~# curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -446,6 +460,12 @@ Cluster ID      6464495e-a516-421d-a294-795df5563b18
 HA Enabled      false
 root@testsrv:/etc/vault.d# 
 ```
+
+
+
+######################################################################################
+
+
 
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 
@@ -725,6 +745,10 @@ gendalf@pc01:~$
 
 
 
+######################################################################################
+
+
+
 6. Установите nginx
 
 ## Решение:
@@ -815,10 +839,16 @@ Jan 19 12:16:32 testsrv systemd[1]: Started nginx - high performance web server.
 root@testsrv:~/test.local.PKI# 
 ```
 
+
+######################################################################################
+
+
+
 7. По инструкции ([ссылка](https://nginx.org/en/docs/http/configuring_https_servers.html)) настройте nginx на https, используя ранее подготовленный сертификат:
   - можно использовать стандартную стартовую страницу nginx для демонстрации работы сервера;
   - можно использовать и другой html файл, сделанный вами;
- ## Решение
+    ### Решение
+   
  * Создание и проверка файла конфигурации nginx
  ```
 root@testsrv:~# cd /etc/nginx/conf.d/
@@ -859,8 +889,10 @@ root@testsrv:/etc/nginx/conf.d#
 root@testsrv:/etc/nginx/conf.d# systemctl restart nginx
 ```
 
+######################################################################################
+
 8. Откройте в браузере на хосте https адрес страницы, которую обслуживает сервер nginx.
-## Решение
+  ### Решение
 
 * Добавим  адрес сервера `testsrv.test.local` в `/etc/hosts` на хосте. 
 ```
@@ -872,9 +904,41 @@ gendalf@pc01:~$ cat /etc/hosts
 
 gendalf@pc01:~$ 
 ```
-* Откроем страницу в браузере. Доступ осуществляется через порт 4443, согласно конфига vagrant:
+* Откроем страницу в браузере. Доступ извне осуществляется через порт 4443, согласно конфига vagrant:
 * [Скриншот 1](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%20%D0%B1%D1%80%D0%B0%D1%83%D0%B7%D0%B5%D1%80%D0%B0%201.png)
 * [Скриншот 2](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%20%D0%B1%D1%80%D0%B0%D1%83%D0%B7%D0%B5%D1%80%D0%B0%202.png)
 * [Скриншот 3](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%20%D0%B1%D1%80%D0%B0%D1%83%D0%B7%D0%B5%D1%80%D0%B0_%D0%BF%D1%80%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%20%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%B0.png)
+
+
+9. Создайте скрипт, который будет генерировать новый сертификат в vault:
+  - генерируем новый сертификат так, чтобы не переписывать конфиг nginx;
+  - перезапускаем nginx для применения нового сертификата.
+  ### Решение
+* Создадим скрипт
+```
+root@testsrv:/etc/nginx/conf.d# cd ~/test.local.PKI/
+root@testsrv:~/test.local.PKI# vim gen_nginx_cert.sh
+root@testsrv:~/test.local.PKI# chmod +x gen_nginx_cert.sh 
+root@testsrv:~/test.local.PKI# ll gen_nginx_cert.sh 
+-rwxr-xr-x 1 root root 570 Jan 19 12:54 gen_nginx_cert.sh*
+root@testsrv:~/test.local.PKI# 
+```
+
+* Содержимое скрипта
+```bash
+#!/usr/bin/env bash
+
+export VAULT_ADDR=https://127.0.0.1:8200
+export VAULT_TOKEN=s.gtFWQnJh4C7ZpDLeK9d2RG6A
+
+vault write -format=json pki_int/issue/test-dot-local \
+    common_name=testsrv.test.local  ttl="720h" > testsrv.test.local.crt.file
+
+cat testsrv.test.local.crt.file | jq -r .data.certificate > /etc/nginx/ssl/testsrv.test.local.crt
+cat testsrv.test.local.crt.file | jq -r .data.issuing_ca >> /etc/nginx/ssl/testsrv.test.local.crt
+cat testsrv.test.local.crt.file | jq -r .data.private_key > /etc/nginx/ssl/testsrv.test.local.key
+
+systemctl restart nginx.service
+```
 
 
