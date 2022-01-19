@@ -968,7 +968,7 @@ root@testsrv:~/test.local.PKI#
 
 * После отключения автоматической синхронизации времени в VirtualBox [ссылка](https://www.winklerweb.net/index.php/blog/11-tools/25-disabling-time-synchronization-in-virtualbox-ubuntu-16-04)  - перезагрузим ВМ и повторно распечатаем vault
 * Проверим работоспособность ранее созданного crontab
-```bash
+```
 root@testsrv:~# date --set "Feb 28 22:59:57"
 Mon 28 Feb 2022 10:59:57 PM UTC
 root@testsrv:~# date
