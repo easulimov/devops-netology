@@ -321,7 +321,7 @@ root@testsrv:/etc/vault.d# export VAULT_ADDR=https://127.0.0.1:8200
 root@testsrv:/etc/vault.d# vim /etc/environment 
 root@testsrv:/etc/vault.d# cat /etc/environment 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
-export VAULT_ADDR=https://127.0.0.1:8200
+VAULT_ADDR=https://127.0.0.1:8200
 root@testsrv:/etc/vault.d# 
 root@testsrv:/etc/vault.d# 
 root@testsrv:/etc/vault.d# systemctl enable vault --now
