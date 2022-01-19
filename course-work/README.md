@@ -120,7 +120,7 @@ gendalf@pc01:~/course-work$ vagrant ssh
 ```
 
 2. Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
-*  ufw
+*  Настройка ufw
 ```
 vagrant@testsrv:~$ sudo -i
 root@testsrv:~# ufw status
