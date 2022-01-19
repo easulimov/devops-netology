@@ -857,6 +857,24 @@ root@testsrv:/etc/nginx/conf.d#
 * Проверка файла конфигурации nginx прошла успешно. Можно перезапустить nginx
 ```
 root@testsrv:/etc/nginx/conf.d# systemctl restart nginx
-
 ```
+
+8. Откройте в браузере на хосте https адрес страницы, которую обслуживает сервер nginx.
+## Решение
+
+* Добавим  адрес сервера `testsrv.test.local` в `/etc/hosts` на хосте. 
+```
+gendalf@pc01:~$ vim /etc/hosts
+gendalf@pc01:~$ cat /etc/hosts
+127.0.0.1	localhost
+127.0.1.1	pc01
+127.0.0.1       testsrv.test.local
+
+gendalf@pc01:~$ 
+```
+* Откроем страницу в браузере. Доступ осуществляется через порт 4443, согласно конфига vagrant:
+* [Скриншот 1](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%20%D0%B1%D1%80%D0%B0%D1%83%D0%B7%D0%B5%D1%80%D0%B0%201.png)
+* [Скриншот 2](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%20%D0%B1%D1%80%D0%B0%D1%83%D0%B7%D0%B5%D1%80%D0%B0%202.png)
+* [Скриншот 3](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%20%D0%B1%D1%80%D0%B0%D1%83%D0%B7%D0%B5%D1%80%D0%B0_%D0%BF%D1%80%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%20%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%B0.png)
+
 
