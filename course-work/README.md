@@ -856,6 +856,7 @@ root@testsrv:/etc/nginx/conf.d#
 
 * Проверка файла конфигурации nginx прошла успешно. Можно перезапустить nginx
 ```
+root@testsrv:/etc/nginx/conf.d# systemctl restart nginx
 
 ```
 
