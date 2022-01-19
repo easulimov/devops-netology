@@ -120,6 +120,8 @@ gendalf@pc01:~/course-work$ vagrant ssh
 ```
 
 2. Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
+
+## Решение:
 *  Настройка ufw
 ```
 vagrant@testsrv:~$ sudo -i
@@ -168,6 +170,8 @@ root@testsrv:~#
 ```
 
 3. Установите hashicorp vault ([инструкция по ссылке](https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started#install-vault)).
+
+## Решение:
 * Установка Vault
 ```
 root@testsrv:~# curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -445,6 +449,8 @@ root@testsrv:/etc/vault.d#
 
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 
+
+## Решение:
 * Выполним логин с использованием ранее полученного root токена
 ```
 root@testsrv:/etc/vault.d# vault login 
@@ -590,10 +596,102 @@ Success! Data written to: pki_int/roles/test-dot-local
 + jq -r .data.issuing_ca
 + cat testsrv.test.local.crt.file
 + jq -r .data.private_key
+root@testsrv:~/test.local.PKI#
+```
+
+* Проверка результатов выполнения команд в скрипте
+```
+root@testsrv:~/test.local.PKI# ll
+total 36
+drwxr-xr-x 2 root root 4096 Jan 19 11:37 ./
+drwx------ 6 root root 4096 Jan 19 11:29 ../
+-rw-r--r-- 1 root root 1168 Jan 19 11:37 CA_cert.crt
+-rwxr-xr-x 1 root root 3804 Jan 19 11:18 gen_PKI.sh*
+-rw-r--r-- 1 root root 1326 Jan 19 11:37 intermediate.cert.pem
+-rw-r--r-- 1 root root 2689 Jan 19 11:37 pki-ca-root.json
+-rw-r--r-- 1 root root  924 Jan 19 11:37 pki_intermediate.csr
+-rw-r--r-- 1 root root 6233 Jan 19 11:37 testsrv.test.local.crt.file
+root@testsrv:~/test.local.PKI# ll /etc/nginx/ssl/
+total 16
+drwxr-xr-x 2 root root 4096 Jan 19 11:30 ./
+drwxr-xr-x 3 root root 4096 Jan 19 11:23 ../
+-rw-r--r-- 1 root root 2737 Jan 19 11:37 testsrv.test.local.crt
+-rw-r--r-- 1 root root 1679 Jan 19 11:37 testsrv.test.local.key
+root@testsrv:~/test.local.PKI# cat CA_cert.crt 
+-----BEGIN CERTIFICATE-----
+MIIDMjCCAhqgAwIBAgIUfUcPDJkB2Oc8G4aXzRS6VIM6NYkwDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAxMKdGVzdC5sb2NhbDAeFw0yMjAxMTkxMTM2NTNaFw0yMzAx
+MTkxMTM3MjNaMBUxEzARBgNVBAMTCnRlc3QubG9jYWwwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQChi0q2z5zbflZZsY8l/u3i5+PSIm91tByRiu/fwG0/
+80VPcF/3kBHX2U2uy7pIngxW3AAaD7WeIOjU3dEXBXAX/Gele8KqLcDKOEBV2NWr
+swT0tcM5X6HJjhkApcFY4eE99Nvgj6QuTCgYLrZHeT5CUe3NN+iu9ZXziHa5iE1t
+7DBaau+PCoSUZZ4AoGGGnHRAafiCnkAQzaD09iDisD/Q7KROy099Yd30cB2tvmUb
+eXWbrXbqS0n9Ga4/mQTg4VhZQUoB8SOryQwtC7Wnpfk/fh+KSz19sLzRxMVebA7r
+tLPI6FA/Ay4mPyviEMn53BijUgAvq5sEGRHMQ8/By0QTAgMBAAGjejB4MA4GA1Ud
+DwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSrNWl2kSIXu3Pw
+ue6Ak+V4CcI4mjAfBgNVHSMEGDAWgBSrNWl2kSIXu3Pwue6Ak+V4CcI4mjAVBgNV
+HREEDjAMggp0ZXN0LmxvY2FsMA0GCSqGSIb3DQEBCwUAA4IBAQCW3vPrOW7fc+AJ
+Su2vIWZRjUmU22bPqRlKypJbi2OGseRmhn7eQgkuUqygz2eSZjqlyNl8PR8rANMO
+n+5U19CM+BKQIUOXVrq/A+0IP+NyvtB2j2eB0l8fjuQkpZx9GW+arieHE2ZFQSiB
+71b2c7YBCV6eKKYt72G3LUSPiHgJWmjQGk1CU6rs2KgJEUMOQgqEL1vB3lBV3dBe
+DIJQjgOlQ3+UoaWEUbNVtg8aGA8PZgATIoTr4r1iXtSBJQ3IdT6u3vtMVTtPAt7W
+7ErfqzVDByIijiKD071d5RkLDf3zJL7pFGIuKXjAbig1v3SfLt8Ek5QliNP6KdCV
+CqEbiGEc
+-----END CERTIFICATE-----
 root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI# cat /etc/nginx/ssl/testsrv.test.local.crt 
+-----BEGIN CERTIFICATE-----
+MIID5TCCAs2gAwIBAgIUYnINlsBUmgJb/L+PGbnUHSWZNv4wDQYJKoZIhvcNAQEL
+BQAwLDEqMCgGA1UEAxMhdGVzdC5sb2NhbCBJbnRlcm1lZGlhdGUgQXV0aG9yaXR5
+MB4XDTIyMDExOTExMzY1NFoXDTIyMDIxODExMzcyNFowHTEbMBkGA1UEAxMSdGVz
+dHNydi50ZXN0LmxvY2FsMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+ztEAmS1GJGrsiDLSgd9RFd+ht/6YPbhNWh4OznAiilvqEvSLtzSqIgWm3SUG+bZc
+1WDmDF7/SY/yAbsHsDIqicNCUritwzzc31Y23cEf8tAlz5IP1ZijcZs/bn/8d9Eb
+sftW2hRNmnRAcnO2S53DnpLYVT65bQ5kKLZ/2lHW1xsRHt8n/rlDTGBJA22YwVk3
+CAfVD6dSiFSLZSrZ4lG6A6paxkHTrBuiWwpioN9IN3OW9Kpk9w2VkuWBOxLHzKio
+MlTW8MvInhC09nkKV67cXn/A4KzjFOFzbG3mZzd1KMpnQPPp78MPXZ+nQH/aBmZv
+qgMsqCJN6YMlefIDt0WFGwIDAQABo4IBDDCCAQgwDgYDVR0PAQH/BAQDAgOoMB0G
+A1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAdBgNVHQ4EFgQU7pCWotTK+HYl
+LC/aZkeomtBFRqUwHwYDVR0jBBgwFoAU4Sra/jGVcZDTX5GjDWnm9MugaAcwQAYI
+KwYBBQUHAQEENDAyMDAGCCsGAQUFBzAChiRodHRwczovLzEyNy4wLjAuMTo4MjAw
+L3YxL3BraV9pbnQvY2EwHQYDVR0RBBYwFIISdGVzdHNydi50ZXN0LmxvY2FsMDYG
+A1UdHwQvMC0wK6ApoCeGJWh0dHBzOi8vMTI3LjAuMC4xOjgyMDAvdjEvcGtpX2lu
+dC9jcmwwDQYJKoZIhvcNAQELBQADggEBAJ/LJEqbpwODoxwMz0DMo+onoFG9dUVP
+CxCezOaY7IROUFemCO0KugC2HhSNYiWYW+SxdQLkVdVwSCNKEb0Eao44/Ez2Hk3V
+qvgsl0AfdwFTFTi6XH3NoXqr8AD1yPBunwokDdx6zt1sKHTyrgbMX7GBqtBzo/4V
+EyT4ZKrVah333CJycFA47QebY2m2/sqguZ7IAcRYRE9silEpTG8udIrug30WvOXC
+vszpGugiLmgDH2PzKsDZ0GoxPSTXtAglfi3jJDs74IFyVOmYjLZH8UROrCq8bHbA
+lAQrK2YgVaTiwXCAKaMU4d1WgAk4u7yIx3Eun1RarKzxzevcNlR+l/0=
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIDpjCCAo6gAwIBAgIUeFpunAi0hIox2hJ/vxlFtF7g4P8wDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAxMKdGVzdC5sb2NhbDAeFw0yMjAxMTkxMTM2NTRaFw0yNzAx
+MTgxMTM3MjRaMCwxKjAoBgNVBAMTIXRlc3QubG9jYWwgSW50ZXJtZWRpYXRlIEF1
+dGhvcml0eTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMZbIcIggmG8
+NgWWanyIfsY+F9/ALfCjEDWJCoa/hHgp/soGCx5Md+ZEWl2Vi9UfOLAI7Uy+ZdXS
+d1b1mQ/fLrAb/O69QzNT5HH6C5D5DxyTYpDzK6tyzpbU8br1f8RYU6XGi5mLg7Av
+8JGmNJ/YiBwKC6tcjDXjfj9Ec4Jylxqi7zEx192s+QrlC7SVvwSQZrSSZ1xnAyug
+KuVrQuY7Rkh+KO2NIXDNmuEEIEM9ua3n1PkL6QNgWCaLzGr7zEMFYrMrgN1zVR2d
+1LHmoe2zsf8st8Sm2YkZNddr0SoSxdBLbximzuAajWomFwjL2RmeL1TFrTz+saVa
++H/9Rab1zJ8CAwEAAaOB1jCB0zAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUw
+AwEB/zAdBgNVHQ4EFgQU4Sra/jGVcZDTX5GjDWnm9MugaAcwHwYDVR0jBBgwFoAU
+qzVpdpEiF7tz8LnugJPleAnCOJowPAYIKwYBBQUHAQEEMDAuMCwGCCsGAQUFBzAC
+hiBodHRwczovLzEyNy4wLjAuMTo4MjAwL3YxL3BraS9jYTAyBgNVHR8EKzApMCeg
+JaAjhiFodHRwczovLzEyNy4wLjAuMTo4MjAwL3YxL3BraS9jcmwwDQYJKoZIhvcN
+AQELBQADggEBADXGqQKZUQGKuwqoFZp3KWuXTZo54tsuVg2ViclJs+t37FqJbEW5
+4CWptpRsXZyeGbGKStmyFmTb9A/bzq4U0f0+GjRFRqhTYIqzKHGrqr0rDL30EU+z
+3P+h+mO8YvxoE69utVTWxAYMtXhpKRpSoq6SRoBBkNJZQQLctutusYz216M3NqkG
+g/SWuANSiDmgHgurtKiXAYQwVN5PBNi7Ztu2in/xNpKfID1A1+WxANVGfqDUU4du
+YJpnSQsSmGySqeHGEcqZF0t+qp0uyt8bZXRaQ5iqifydph+1YG7sldHi8OLs5mKF
+o4FY7I98ceO/uJqNHgGM1fySTqDFdNATBEw=
+-----END CERTIFICATE-----
 root@testsrv:~/test.local.PKI# 
 
 
 ```
 
-6. 
+
+6. Установите nginx
+
+## Решение:
+
