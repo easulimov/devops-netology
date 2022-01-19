@@ -956,6 +956,14 @@ systemctl restart nginx.service
 10. Поместите скрипт в crontab, чтобы сертификат обновлялся какого-то числа каждого месяца в удобное для вас время.
 
 ### Решение
-* Создадим скрипт
+* Создание файла crontab для текущего пользователя. Запуск скритпа `/root/test.local.PKI/gen_nginx_cert.sh` в последний день каждого месяца в 23:00
+```
+root@testsrv:~/test.local.PKI# crontab -e
+root@testsrv:~/test.local.PKI# crontab -l
+SHELL=/bin/bash
+MAILTO = ""
+0 23 * * * [[ "$(date +\%d -d tomorrow)" == "01" ]] && /root/test.local.PKI/gen_nginx_cert.sh
+root@testsrv:~/test.local.PKI# 
+```
 
 
