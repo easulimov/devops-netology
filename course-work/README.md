@@ -957,7 +957,7 @@ systemctl restart nginx.service
 
 ### Решение
 * Создание файла crontab для текущего пользователя. Запуск скритпа `/root/test.local.PKI/gen_nginx_cert.sh` в последний день каждого месяца в 23:00
-```
+```bash
 root@testsrv:~/test.local.PKI# crontab -e
 root@testsrv:~/test.local.PKI# crontab -l
 SHELL=/bin/bash
