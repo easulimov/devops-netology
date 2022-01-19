@@ -382,7 +382,89 @@ existing unseal keys shares. See "vault operator rekey" for more information.
 root@testsrv:/etc/vault.d# 
 ```
 
+* Распечатка vault. Используем любые 3 ключа из 5 ранее выпущенных.
+```
+root@testsrv:/etc/vault.d# vault status
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    0/3
+Unseal Nonce       n/a
+Version            1.9.2
+Storage Type       file
+HA Enabled         false
+root@testsrv:/etc/vault.d# 
+root@testsrv:/etc/vault.d# vault operator unseal 
+Unseal Key (will be hidden): 
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    1/3
+Unseal Nonce       ba2d9e57-a2e9-5287-a639-4ff442a527d9
+Version            1.9.2
+Storage Type       file
+HA Enabled         false
+root@testsrv:/etc/vault.d# vault operator unseal 
+Unseal Key (will be hidden): 
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    2/3
+Unseal Nonce       ba2d9e57-a2e9-5287-a639-4ff442a527d9
+Version            1.9.2
+Storage Type       file
+HA Enabled         false
+root@testsrv:/etc/vault.d# vault operator unseal 
+Unseal Key (will be hidden): 
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    5
+Threshold       3
+Version         1.9.2
+Storage Type    file
+Cluster Name    vault-cluster-dd3e6cdf
+Cluster ID      6464495e-a516-421d-a294-795df5563b18
+HA Enabled      false
+root@testsrv:/etc/vault.d# 
+```
 
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
+
+* Выполним логин с использованием ранее полученного root токена
+```
+root@testsrv:/etc/vault.d# vault login 
+Token (will be hidden): 
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                s.gtFWQnJh4C7ZpDLeK9d2RG6A
+token_accessor       vn4Ud9Ku3LAvdLHrXsimb7hI
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+root@testsrv:/etc/vault.d# 
+```
+
+* 
 
 6. 
