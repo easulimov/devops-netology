@@ -690,8 +690,108 @@ root@testsrv:~/test.local.PKI#
 
 ```
 
+5. Установите корневой сертификат созданного центра сертификации в доверенные в хостовой системе.
+## Решение:
+* Скопируем данные корневого сертификата на хост
+```
+gendalf@pc01:~$ vim CA_cert.crt
+gendalf@pc01:~$ cat CA_cert.crt
+-----BEGIN CERTIFICATE-----
+MIIDMjCCAhqgAwIBAgIUfUcPDJkB2Oc8G4aXzRS6VIM6NYkwDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAxMKdGVzdC5sb2NhbDAeFw0yMjAxMTkxMTM2NTNaFw0yMzAx
+MTkxMTM3MjNaMBUxEzARBgNVBAMTCnRlc3QubG9jYWwwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQChi0q2z5zbflZZsY8l/u3i5+PSIm91tByRiu/fwG0/
+80VPcF/3kBHX2U2uy7pIngxW3AAaD7WeIOjU3dEXBXAX/Gele8KqLcDKOEBV2NWr
+swT0tcM5X6HJjhkApcFY4eE99Nvgj6QuTCgYLrZHeT5CUe3NN+iu9ZXziHa5iE1t
+7DBaau+PCoSUZZ4AoGGGnHRAafiCnkAQzaD09iDisD/Q7KROy099Yd30cB2tvmUb
+eXWbrXbqS0n9Ga4/mQTg4VhZQUoB8SOryQwtC7Wnpfk/fh+KSz19sLzRxMVebA7r
+tLPI6FA/Ay4mPyviEMn53BijUgAvq5sEGRHMQ8/By0QTAgMBAAGjejB4MA4GA1Ud
+DwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSrNWl2kSIXu3Pw
+ue6Ak+V4CcI4mjAfBgNVHSMEGDAWgBSrNWl2kSIXu3Pwue6Ak+V4CcI4mjAVBgNV
+HREEDjAMggp0ZXN0LmxvY2FsMA0GCSqGSIb3DQEBCwUAA4IBAQCW3vPrOW7fc+AJ
+Su2vIWZRjUmU22bPqRlKypJbi2OGseRmhn7eQgkuUqygz2eSZjqlyNl8PR8rANMO
+n+5U19CM+BKQIUOXVrq/A+0IP+NyvtB2j2eB0l8fjuQkpZx9GW+arieHE2ZFQSiB
+71b2c7YBCV6eKKYt72G3LUSPiHgJWmjQGk1CU6rs2KgJEUMOQgqEL1vB3lBV3dBe
+DIJQjgOlQ3+UoaWEUbNVtg8aGA8PZgATIoTr4r1iXtSBJQ3IdT6u3vtMVTtPAt7W
+7ErfqzVDByIijiKD071d5RkLDf3zJL7pFGIuKXjAbig1v3SfLt8Ek5QliNP6KdCV
+CqEbiGEc
+-----END CERTIFICATE-----
+gendalf@pc01:~$ 
+```
+
+* Установим корневой сертификат в доверенные браузера на хосте
+* [Скриншот1](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%94%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%B0%20%D0%B2%20%D0%B4%D0%BE%D0%B2%D0%B5%D1%80%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5.png)
+* [Скриншот2](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/CA_cert.png)
+
+
 
 6. Установите nginx
 
 ## Решение:
+```
+root@testsrv:~/test.local.PKI# apt install gnupg2 ca-certificates lsb-release ubuntu-keyring
+Reading package lists... Done
+Building dependency tree       
+...
+...
+Setting up gnupg2 (2.2.19-3ubuntu2.1) ...
+Processing triggers for man-db (2.9.1-1) ...
+root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI# curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor \
+>     | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1561  100  1561    0     0   3941      0 --:--:-- --:--:-- --:--:--  3941
+root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI# echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \
+> http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
+>     | sudo tee /etc/apt/sources.list.d/nginx.list
+deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu focal nginx
+root@testsrv:~/test.local.PKI# apt update
+Get:1 http://nginx.org/packages/ubuntu focal InRelease [3,584 B]
+...
+...
+14 packages can be upgraded. Run 'apt list --upgradable' to see them.
+root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI# apt install nginx
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  nginx
+0 upgraded, 1 newly installed, 0 to remove and 14 not upgraded.
+Need to get 879 kB of archives.
+After this operation, 3,117 kB of additional disk space will be used.
+Get:1 http://nginx.org/packages/ubuntu focal/nginx amd64 nginx amd64 1.20.2-1~focal [879 kB]
+Fetched 879 kB in 1s (850 kB/s)
+Selecting previously unselected package nginx.
+(Reading database ... 40649 files and directories currently installed.)
+Preparing to unpack .../nginx_1.20.2-1~focal_amd64.deb ...
+----------------------------------------------------------------------
+
+Thanks for using nginx!
+
+Please find the official documentation for nginx here:
+* https://nginx.org/en/docs/
+
+Please subscribe to nginx-announce mailing list to get
+the most important news about nginx:
+* https://nginx.org/en/support.html
+
+Commercial subscriptions for nginx are available on:
+* https://nginx.com/products/
+
+----------------------------------------------------------------------
+Unpacking nginx (1.20.2-1~focal) ...
+Setting up nginx (1.20.2-1~focal) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /lib/systemd/system/nginx.service.
+Processing triggers for man-db (2.9.1-1) ...
+Processing triggers for systemd (245.4-4ubuntu3.13) ...
+root@testsrv:~/test.local.PKI# 
+
+
+```
 
