@@ -35,7 +35,7 @@
 
 ## Решение:
 1. Создайте виртуальную машину Linux.
-```bash
+```
 gendalf@pc01:~$ mkdir course-work
 gendalf@pc01:~$ cd course-work/
 gendalf@pc01:~/course-work$ vim Vagrantfile 
@@ -121,7 +121,7 @@ gendalf@pc01:~/course-work$ vagrant ssh
 
 2. Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
 *  ufw
-```bash
+```
 vagrant@testsrv:~$ sudo -i
 root@testsrv:~# ufw status
 Status: inactive
