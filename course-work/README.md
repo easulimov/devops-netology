@@ -353,13 +353,34 @@ HA Enabled         false
 root@testsrv:/etc/vault.d# 
 ```
 
-* Настройка vault autocomplete - для удобства работы в CLI
+* Настройка vault autocomplete - для удобства работы в CLI (предложение вариантов ввода команд, при двойном нажатии TAB)
 ```
 vault -autocomplete-install && source $HOME/.bashrc
 ```
 
-* Инициализация vault
+* Инициализация vault. 
+```
+root@testsrv:/etc/vault.d# vault operator init
+Unseal Key 1: SEaP/IfYagOXifM4uyLS02cPNPK+dMCqMVSqZGZHrf5M
+Unseal Key 2: faMv5nl1Ckz+XZuj0qRw5ppP3PHlWmuWy0WeAYrGOwIo
+Unseal Key 3: xZ0PjtPwcTay/Kw0pnOKwCrJCij4v2zDnHHhTyfq3EWu
+Unseal Key 4: pIqsrs2PaTQSuvsFH0r4OotGLoApU5dI4DIF5yWPNMTU
+Unseal Key 5: kW8MtDMiCXt7bpOedsxaD3YGxoNyfTx0GiMxgskOojiw
 
+Initial Root Token: s.gtFWQnJh4C7ZpDLeK9d2RG6A
+
+Vault initialized with 5 key shares and a key threshold of 3. Please securely
+distribute the key shares printed above. When the Vault is re-sealed,
+restarted, or stopped, you must supply at least 3 of these keys to unseal it
+before it can start servicing requests.
+
+Vault does not store the generated master key. Without at least 3 keys to
+reconstruct the master key, Vault will remain permanently sealed!
+
+It is possible to generate new unseal keys, provided you have a quorum of
+existing unseal keys shares. See "vault operator rekey" for more information.
+root@testsrv:/etc/vault.d# 
+```
 
 
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
