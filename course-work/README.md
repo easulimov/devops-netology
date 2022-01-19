@@ -166,6 +166,7 @@ Anywhere                   ALLOW IN    127.0.0.0/8
 root@testsrv:~# 
 
 ```
+
 3. Установите hashicorp vault ([инструкция по ссылке](https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started#install-vault)).
 * Установка Vault
 ```
@@ -200,6 +201,7 @@ Vault v1.9.2 (f4c6d873e2767c0d6853b5d9ffc77b0d297bfbdf)
 root@testsrv:~# 
 
 ```
+
 * Настройка самоподписного сертификата для Vault (для использования TLS)
 ```
 root@testsrv:/opt/vault/tls# vim /tmp/san.cnf
@@ -248,6 +250,7 @@ root@testsrv:/opt/vault/tls# ll selfsigned.*
 -rw------- 1 vault vault 1704 Jan 19 09:49 selfsigned.key
 root@testsrv:/opt/vault/tls# 
 ```
+
 * Для успешной работы службы vault, ранее созданный самоподписной сертификат selfsigned.crt требуется зарегистрировать в хранилище сертификатов ОС
 ```
 root@testsrv:/opt/vault/tls# cp selfsigned.crt /usr/local/share/ca-certificates/
@@ -263,6 +266,7 @@ Running hooks in /etc/ca-certificates/update.d...
 done.
 root@testsrv:/opt/vault/tls# 
 ```
+
 * Настройка файла конфигурации vault.hcl для работы по https
 ```
 root@testsrv:/opt/vault/tls# cd /etc/vault.d/
@@ -293,6 +297,7 @@ api_addr = "https://127.0.0.1:8200"
 root@testsrv:/etc/vault.d# 
 root@testsrv:/etc/vault.d# 
 ```
+
 * Экспорт переменной VAULT_ADDR и запуск службы vault.service
 ```
 root@testsrv:/etc/vault.d# export VAULT_ADDR=https://127.0.0.1:8200
@@ -329,6 +334,33 @@ Jan 19 10:11:43 testsrv vault[16942]: 2022-01-19T10:11:43.159Z [INFO]  proxy env
 Jan 19 10:11:43 testsrv vault[16942]: 2022-01-19T10:11:43.177Z [INFO]  core: Initializing VersionTimestamps for core
 root@testsrv:/etc/vault.d# 
 ```
-* 
+
+* Проверка статуса vault
+```
+root@testsrv:/etc/vault.d# vault status
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        false
+Sealed             true
+Total Shares       0
+Threshold          0
+Unseal Progress    0/0
+Unseal Nonce       n/a
+Version            1.9.2
+Storage Type       file
+HA Enabled         false
+root@testsrv:/etc/vault.d# 
+```
+
+* Настройка vault autocomplete - для удобства работы в CLI
+```
+vault -autocomplete-install && source $HOME/.bashrc
+```
+
+* Инициализация vault
+
+
+
 4. Cоздайте центр сертификации по инструкции ([ссылка](https://learn.hashicorp.com/tutorials/vault/pki-engine?in=vault/secrets-management)) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 5. 
