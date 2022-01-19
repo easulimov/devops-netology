@@ -63,7 +63,7 @@ vault write pki_int/roles/test-dot-local \
 vault write -format=json pki_int/issue/test-dot-local \
     common_name=testsrv.test.local  ttl="720h" > testsrv.test.local.crt.file
 
-#extract the certificate, issuing ca in the pem file and private key in the key file separately
+# Сохранение сертификата и ключа в отдельные файлы, расположенные в директориях, которые будут использоваться в конфиге nginx
 cat testsrv.test.local.crt.file | jq -r .data.certificate > /etc/nginx/ssl/testsrv.test.local.crt
 cat testsrv.test.local.crt.file | jq -r .data.issuing_ca >> /etc/nginx/ssl/testsrv.test.local.crt
 cat testsrv.test.local.crt.file | jq -r .data.private_key > /etc/nginx/ssl/testsrv.test.local.key
