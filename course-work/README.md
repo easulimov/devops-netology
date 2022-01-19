@@ -966,4 +966,41 @@ MAILTO = ""
 root@testsrv:~/test.local.PKI# 
 ```
 
+* После отключения автоматической синхронизации времени в VirtualBox [ссылка](https://www.winklerweb.net/index.php/blog/11-tools/25-disabling-time-synchronization-in-virtualbox-ubuntu-16-04)  - перезагрузим ВМ и повторно распечатаем vault
+* Проверим работоспособность ранее созданного crontab
+```bash
+root@testsrv:~# date --set "Feb 28 22:59:57"
+Mon 28 Feb 2022 10:59:57 PM UTC
+root@testsrv:~# date
+Mon 28 Feb 2022 11:00:07 PM UTC
+root@testsrv:~# ll /etc/nginx/ssl
+total 16
+drwxr-xr-x 2 root root 4096 Jan 19 11:30 ./
+drwxr-xr-x 4 root root 4096 Jan 19 11:54 ../
+-rw-r--r-- 1 root root 2737 Feb 28  2022 testsrv.test.local.crt
+-rw-r--r-- 1 root root 1679 Feb 28  2022 testsrv.test.local.key
+root@testsrv:~# grep CRON /var/log/syslog
+syslog    syslog.1  
+root@testsrv:~# grep CRON /var/log/syslog*
+/var/log/syslog:Feb 28 23:00:39 testsrv CRON[1280]: (root) CMD ([[ "$(date +%d -d tomorrow)" == "01" ]] && /root/test.local.PKI/gen_nginx_cert.sh)
+/var/log/syslog.1:Jan 19 13:53:04 testsrv cron[731]: (CRON) INFO (pidfile fd = 3)
+/var/log/syslog.1:Jan 19 13:53:04 testsrv cron[731]: (CRON) INFO (Running @reboot jobs)
+root@testsrv:~# date --set "Mar 31 22:59:57"
+Thu 31 Mar 2022 10:59:57 PM UTC
+root@testsrv:~# ll /etc/nginx/ssl
+total 16
+drwxr-xr-x 2 root root 4096 Jan 19 11:30 ./
+drwxr-xr-x 4 root root 4096 Jan 19 11:54 ../
+-rw-r--r-- 1 root root 2737 Mar 31 23:00 testsrv.test.local.crt
+-rw-r--r-- 1 root root 1675 Mar 31 23:00 testsrv.test.local.key
+root@testsrv:~# grep CRON /var/log/syslog*
+/var/log/syslog:Mar 31 23:00:05 testsrv CRON[1361]: (root) CMD ([[ "$(date +%d -d tomorrow)" == "01" ]] && /root/test.local.PKI/gen_nginx_cert.sh)
+/var/log/syslog.1:Feb 28 23:00:39 testsrv CRON[1280]: (root) CMD ([[ "$(date +%d -d tomorrow)" == "01" ]] && /root/test.local.PKI/gen_nginx_cert.sh)
+root@testsrv:~# 
+```
+
+* Так как теперь дата и время на хосте и ВМ отличаются, временно установим дату и время на хосте аналогично ВМ. Откроем тестовую страницу и проверим сертификат на веб сервере nginx. Проигнорируем сообщения браузера некорректно установленное время:
+* [Скриншот 1](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%9F%D1%80%D0%B5%D0%B4%D1%83%D0%BF%D1%80%D0%B5%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B1%D1%80%D0%B0%D1%83%D0%B7%D0%B5%D1%80%D0%B0.png)
+* [Скриншот 2](https://raw.githubusercontent.com/easulimov/devops-netology/main/course-work/img/%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9%20%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82.png)
+
 
