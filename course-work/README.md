@@ -553,5 +553,47 @@ cat testsrv.test.local.crt.file | jq -r .data.private_key > /etc/nginx/ssl/tests
 #############################################################################################
 ```
 
+* Запускаем скрипт 
+```
+root@testsrv:~/test.local.PKI# ./gen_PKI.sh 
++ export VAULT_ADDR=https://127.0.0.1:8200
++ VAULT_ADDR=https://127.0.0.1:8200
++ export VAULT_TOKEN=s.gtFWQnJh4C7ZpDLeK9d2RG6A
++ VAULT_TOKEN=s.gtFWQnJh4C7ZpDLeK9d2RG6A
++ vault secrets enable pki
+Success! Enabled the pki secrets engine at: pki/
++ vault secrets tune -max-lease-ttl=87600h pki
+Success! Tuned the secrets engine at: pki/
++ vault write -format=json pki/root/generate/internal common_name=test.local ttl=8760h
++ cat pki-ca-root.json
++ jq -r .data.certificate
++ vault write pki/config/urls issuing_certificates=https://127.0.0.1:8200/v1/pki/ca crl_distribution_points=https://127.0.0.1:8200/v1/pki/crl
+Success! Data written to: pki/config/urls
++ vault secrets enable -path=pki_int pki
+Success! Enabled the pki secrets engine at: pki_int/
++ vault secrets tune -max-lease-ttl=43800h pki_int
+Success! Tuned the secrets engine at: pki_int/
++ vault write -format=json pki_int/intermediate/generate/internal 'common_name=test.local Intermediate Authority'
++ jq -r .data.csr
++ vault write -format=json pki/root/sign-intermediate csr=@pki_intermediate.csr format=pem_bundle ttl=43800h
++ jq -r .data.certificate
++ vault write pki_int/intermediate/set-signed certificate=@intermediate.cert.pem
+Success! Data written to: pki_int/intermediate/set-signed
++ vault write pki_int/config/urls issuing_certificates=https://127.0.0.1:8200/v1/pki_int/ca crl_distribution_points=https://127.0.0.1:8200/v1/pki_int/crl
+Success! Data written to: pki_int/config/urls
++ vault write pki_int/roles/test-dot-local allowed_domains=test.local allow_subdomains=true max_ttl=8760h
+Success! Data written to: pki_int/roles/test-dot-local
++ vault write -format=json pki_int/issue/test-dot-local common_name=testsrv.test.local ttl=720h
++ cat testsrv.test.local.crt.file
++ jq -r .data.certificate
++ cat testsrv.test.local.crt.file
++ jq -r .data.issuing_ca
++ cat testsrv.test.local.crt.file
++ jq -r .data.private_key
+root@testsrv:~/test.local.PKI# 
+root@testsrv:~/test.local.PKI# 
+
+
+```
 
 6. 
