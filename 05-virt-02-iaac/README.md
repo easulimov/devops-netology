@@ -30,17 +30,32 @@
 ### Решение:
 
 - VirtualBox
+* Установка
 ```
 sudo apt update && sudo apt install -y linux-headers-$(uname -r) build-essential dkms \
 virtualbox virtualbox-ext-pack vde2 virtualbox-guest-additions-iso
 ```
-   * 
+* Версия
+```
+sysadm@pc01:~$ vboxmanage --version
+6.1.26_Ubuntur145957
+```
+
 - Vagrant
-   * https://www.vagrantup.com/downloads
-   * curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-   * sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-   * sudo apt update && sudo apt install vagrant
-   * vargant --version
+* Установка
+```
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && \
+sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
+sudo apt update && sudo apt install -y vagrant
+```
+* Версия
+```
+sysadm@pc01:~$ vagrant --version
+Vagrant 2.2.19
+sysadm@pc01:~$ 
+```
+
+
 
 ## Задача 4 (*)
 
