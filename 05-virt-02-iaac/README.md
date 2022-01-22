@@ -30,9 +30,10 @@
 ### Решение:
 
 - VirtualBox
-   ```sudo apt update && sudo apt install -y linux-headers-$(uname -r) build-essential dkms \
-   virtualbox virtualbox-ext-pack vde2 virtualbox-guest-additions-iso
-   ```
+```
+sudo apt update && sudo apt install -y linux-headers-$(uname -r) build-essential dkms \
+virtualbox virtualbox-ext-pack vde2 virtualbox-guest-additions-iso
+```
    * 
 - Vagrant
    * https://www.vagrantup.com/downloads
