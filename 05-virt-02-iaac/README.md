@@ -104,6 +104,23 @@ sysadm@pc01:~/.ssh$ ll id_*
 sysadm@pc01:~/.ssh$ 
 ```
 
+* Подготовим конфигурационные файлы, использовавшиеся в практической части лекции (некоторые переменные изменены под локальное окружение):
+```
+sysadm@pc01:~/PycharmProjects/devops-netology/05-virt-02-iaac$ tree
+.
+├── README.md
+└── src
+    ├── ansible
+    │   ├── inventory
+    │   └── provision.yml
+    └── vagrant
+        ├── ansible.cfg
+        └── Vagrantfile
+
+3 directories, 5 files
+sysadm@pc01:~/PycharmProjects/devops-netology/05-virt-02-iaac$ 
+```
+
 * Перейдем в директорию, где находится подготовленный `Vagrantfile` и  выполним команду `vagrant up`
 ```
 sysadm@pc01:~/PycharmProjects/devops-netology/05-virt-02-iaac/src/vagrant$ vagrant up
