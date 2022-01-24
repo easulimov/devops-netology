@@ -113,7 +113,7 @@ vagrant@server1:~$
 
 * [Ссылка на профиль seadockerhub в hub.docker.com](https://hub.docker.com/u/seadockerhub)
 
-* Комада для скачивания образа
+* Команда для скачивания образа
 ```
 docker pull seadockerhub/websrv:v0.1
 ```
@@ -207,3 +207,51 @@ vagrant@server1:~$
 
 
 ### Решение
+* Используем `Dockerfile` из практической части лекции
+```
+vagrant@server1:~$ mkdir docker_ansible
+vagrant@server1:~$ cd docker_ansible/
+vagrant@server1:~/docker_ansible$ vim Dockerfile
+vagrant@server1:~/docker_ansible$ docker build -t seadockerhub/ansible:v2.9.24 .
+Sending build context to Docker daemon   2.56kB
+Step 1/5 : FROM alpine:3.14
+...
+...
+...
+Successfully built b7ec179e63cb
+Successfully tagged seadockerhub/ansible:v2.9.24
+vagrant@server1:~/docker_ansible$ 
+vagrant@server1:~/docker_ansible$ docker image ls
+REPOSITORY             TAG       IMAGE ID       CREATED             SIZE
+seadockerhub/ansible   v2.9.24   b7ec179e63cb   2 minutes ago       227MB
+seadockerhub/websrv    v0.1      5265ca22cfc4   About an hour ago   141MB
+...
+...
+vagrant@server1:~/docker_ansible$ \
+vagrant@server1:~/docker_ansible$ docker run -it --name ansible seadockerhub/ansible:v2.9.24
+ansible-playbook 2.9.24
+  config file = None
+  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.9/site-packages/ansible
+  executable location = /usr/bin/ansible-playbook
+  python version = 3.9.5 (default, Nov 24 2021, 21:19:13) [GCC 10.3.1 20210424]
+vagrant@server1:~/docker_ansible$ 
+vagrant@server1:~/docker_ansible$ docker login
+Authenticating with existing credentials...
+...
+...
+Login Succeeded
+vagrant@server1:~/docker_ansible$ docker push seadockerhub/ansible:v2.9.24
+The push refers to repository [docker.io/seadockerhub/ansible]
+995425d1018e: Pushed 
+ee22d1cfddd0: Pushed 
+1a058d5342cc: Mounted from library/alpine 
+v2.9.24: digest: sha256:46f26e0a0529eb1471189be7f2a96173e485567d919b2f557862d70ce47900ae size: 947
+vagrant@server1:~/docker_ansible$ 
+```
+* [Ссылка на профиль seadockerhub в hub.docker.com](https://hub.docker.com/u/seadockerhub)
+
+* Команда для скачивания образа
+```
+docker pull seadockerhub/ansible:v2.9.24
+```
