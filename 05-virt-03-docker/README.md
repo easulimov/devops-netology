@@ -111,7 +111,7 @@ v0.1: digest: sha256:c78d912d9744c662b548ab5955f89d38b7069b4f7dad933fba29696acd7
 vagrant@server1:~$ 
 ```
 
-* [Ссылка на профиль в hub.docker.com](https://hub.docker.com/u/seadockerhub)
+* [Ссылка на профиль seadockerhub в hub.docker.com](https://hub.docker.com/u/seadockerhub)
 
 * Комада для скачивания образа
 ```
