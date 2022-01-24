@@ -21,7 +21,7 @@ Hey, Netology
 Опубликуйте созданный форк в своем репозитории и предоставьте ответ в виде ссылки на https://hub.docker.com/username_repo.
 
 ### Решение
-* Выполненные шаги
+* Выполненые шаги
 ```
 vagrant@server1:~$ mkdir docker_nginx
 vagrant@server1:~$ vim index.html
@@ -148,6 +148,56 @@ docker pull seadockerhub/websrv:v0.1
 - Подключитесь к первому контейнеру с помощью ```docker exec``` и создайте текстовый файл любого содержания в ```/data```;
 - Добавьте еще один файл в папку ```/data``` на хостовой машине;
 - Подключитесь во второй контейнер и отобразите листинг и содержание файлов в ```/data``` контейнера.
+
+
+### Решение
+* Выполненые шаги
+```
+vagrant@server1:~$ mkdir ~/data
+vagrant@server1:~$
+vagrant@server1:~$
+vagrant@server1:~$ docker run -it -d -v ~/data:/data -h "centos" --name centos01 centos
+6b95b9623c42b1489992e15591311809360fa038495cab5583323be7819ae536
+vagrant@server1:~$
+vagrant@server1:~$
+vagrant@server1:~$ docker run -it -d -v ~/data:/data -h "debian" --name debian01 debian
+acda43a3697ca90c4b45a3da126f78fb2fda019781cbb0082def641293fd4278
+vagrant@server1:~$
+vagrant@server1:~$
+vagrant@server1:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND       CREATED          STATUS          PORTS     NAMES
+acda43a3697c   debian    "bash"        36 seconds ago   Up 36 seconds             debian01
+6b95b9623c42   centos    "/bin/bash"   44 seconds ago   Up 43 seconds             centos01
+vagrant@server1:~$ 
+vagrant@server1:~$
+vagrant@server1:~$ docker exec -it centos01 /bin/bash
+[root@centos /]# ls
+bin   dev  home  lib64	     media  opt   root	sbin  sys  usr
+data  etc  lib	 lost+found  mnt    proc  run	srv   tmp  var
+[root@centos /]# cd data && echo "Hi from centos" > hi_from_centos.txt
+[root@centos data]# ls
+hi_from_centos.txt
+[root@centos data]# read escape sequence
+vagrant@server1:~$ 
+vagrant@server1:~$ 
+vagrant@server1:~$ 
+vagrant@server1:~$ cd ~/data/ && echo "Hi from host" > hi_from_host.txt 
+vagrant@server1:~/data$ cd ~
+vagrant@server1:~$ docker exec -it debian01 /bin/bash
+root@debian:/# cd /data 
+root@debian:/data# ls -la
+total 16
+drwxrwxr-x 2 1000 1000 4096 Jan 24 20:51 .
+drwxr-xr-x 1 root root 4096 Jan 24 20:42 ..
+-rw-r--r-- 1 root root   15 Jan 24 20:45 hi_from_centos.txt
+-rw-rw-r-- 1 1000 1000   13 Jan 24 20:51 hi_from_host.txt
+root@debian:/data# cat *.txt
+Hi from centos
+Hi from host
+root@debian:/data# 
+root@debian:/data# read escape sequence
+vagrant@server1:~$ 
+```
 
 ## Задача 4 (*)
 
