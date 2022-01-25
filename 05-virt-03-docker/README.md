@@ -207,7 +207,7 @@ vagrant@server1:~$
 
 
 ### Решение
-* Используем [Dockerfile](05-virt-03-docker/src/build/ansible/Dockerfile) из практической части лекции
+* Используем [Dockerfile](https://github.com/easulimov/devops-netology/blob/main/05-virt-03-docker/src/build/ansible/Dockerfile) из практической части лекции
 ```
 vagrant@server1:~$ mkdir docker_ansible
 vagrant@server1:~$ cd docker_ansible/
