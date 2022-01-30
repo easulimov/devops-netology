@@ -49,6 +49,7 @@
   ```
    yc vpc network list-subnets net
   ```
+---
 
   * Установка `packer`
   ```
