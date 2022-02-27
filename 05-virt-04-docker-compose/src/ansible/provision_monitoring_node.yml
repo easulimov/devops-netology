@@ -1,6 +1,6 @@
 ---
 
-  - hosts: nodes
+  - hosts: under_monitoring
     become: yes
     become_user: root
     remote_user: centos
@@ -27,6 +27,7 @@
             - curl
             - yum-utils
 
+
       - name: Add docker repository
         command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
@@ -43,8 +44,7 @@
       - name: Enable docker daemon
         systemd:
           name: docker
-          daemon-reload: true
-          state: restarted
+          state: started
           enabled: yes
 
       - name: Install docker-compose
@@ -60,7 +60,7 @@
         become: true
 
       - name: Pull all images in compose
-        command: docker-compose -f /opt/stack/docker-compose.yaml pull
+        command: docker-compose -f /opt/stack/docker-compose-node2.yaml pull
 
       - name: Up all services in compose
-        command: docker-compose -f /opt/stack/docker-compose.yaml up -d
+        command: docker-compose -f /opt/stack/docker-compose-node2.yaml up -d

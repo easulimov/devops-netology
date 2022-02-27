@@ -2,4 +2,7 @@
 manager
 
 [manager]
-node01.netology.cloud ansible_host=
+node01.netology.cloud ansible_host=51.250.11.126
+
+[under_monitoring]
+node02.netology.cloud ansible_host=51.250.13.22

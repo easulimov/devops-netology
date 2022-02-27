@@ -8,7 +8,7 @@
       "image_name": "centos-7-base",
       "source_image_family": "centos-7",
       "ssh_username": "centos",
-      "subnet_id": "e9bjmotppmeka09qapqs",
+      "subnet_id": "e9b7d0b400scqa1m0l5l",
       "token": "",
       "type": "yandex",
       "use_ipv4_nat": true,
@@ -19,7 +19,7 @@
     {
       "inline": [
         "sudo yum -y update",
-        "sudo yum -y install bridge-utils bind-utils iptables curl net-tools tcpdump rsync telnet openssh-server"
+        "sudo yum -y install bridge-utils bind-utils iptables curl net-tools tcpdump rsync telnet openssh-server vim-enhanced mc"
       ],
       "type": "shell"
     }

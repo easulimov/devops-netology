@@ -23,7 +23,7 @@ source "yandex" "centos7"{
   image_name          = "centos-7-base"
   source_image_family = "centos-7"
   ssh_username        = "centos"
-  subnet_id           = "e9bjmotppmeka09qapqs"
+  subnet_id           = "e9b7d0b400scqa1m0l5l"
   token               = ""
   use_ipv4_nat        = true
   zone                = "ru-central1-a"
@@ -36,7 +36,7 @@ build {
   sources = ["source.yandex.centos7"]
 
   provisioner "shell" {
-    inline = ["sudo yum -y update", "sudo yum -y install bridge-utils bind-utils iptables curl net-tools tcpdump rsync telnet openssh-server"]
+    inline = ["sudo yum -y update", "sudo yum -y install bridge-utils bind-utils iptables curl net-tools tcpdump rsync telnet openssh-server vim-enhanced mc"]
   }
 
 }

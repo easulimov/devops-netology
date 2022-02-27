@@ -92,6 +92,16 @@
  ```
    yc resource-manager folder delete netology-sea
  ```
+ #### Результат - создан образ
+ ---
+ <p align="center"> 
+  <img width="1200" height="600" src="./img/task1_screen1.png">
+</p>
+
+ ---
+ <p align="center"> 
+  <img width="1200" height="600" src="./img/task1_screen2.png">
+</p> 
 
 ## Задача 2
 
@@ -113,6 +123,67 @@
   sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
   sudo apt-get update && sudo apt-get install terraform
   ```
+ * Предварительно, в консоле управления YandexCloud или cредствами CLI создаём сервисный аккаунт `service-acc1`
+
+ * Если сервисный аккаунт создан средствами CLI - требуется присвоить ему роль
+
+ * Создание авторизованного ключа для сервисного аккаунта и запись в файл `key.json`
+ ```
+ yc iam key create --service-account-name service-acc1 --output key.json
+ ```
+ * Создание профиля, который будет использоваться для выполнения операций от имени сервисного аккаунта `service-acc1`
+ ```
+ yc config profile create service-acc1-profile
+ ```
+ * Добавление в конфигурацию профиля авторизованного ключа сервисного аккаунта `service-acc1`
+ ```
+ yc config set service-account-key key.json
+ ```
+ * Указание в конфигурации профиля облака
+ ```
+ yc config set cloud-id b1g32bnnvq7h1beo0pne
+ ```
+ * Указание в конфигурации профиля папки
+ ```
+ yc config set folder-id b1g1acekav76h07m2gko
+ ```
+ * Посмотреть список каталогов, доступных этому аккаунту:
+ ```
+ yc resource-manager folder list
+ ```
+---
+
+ * Инициализация конфигурации terraform (проходит по всем *.tf и в зависимости от провайдера скачивает бинарник)
+ ```
+ terraform init
+ ```
+* Предварительный просмотр того, что будет создано в облачной инфраструктуре
+ ```
+ terraform plan
+ ```
+* Внесение изменений в облачную инфраструктуру
+ ```
+ terraform apply
+ ```
+* Удаление ранее внесенных изменений
+ ```
+ terraform destroy
+ ```
+#### Результат - создано две ВМ: node01 с внешним IP 51.250.11.126 и node02 с внешним IP 51.250.13.22
+
+
+<p align="center"> 
+  <img width="1200" height="600" src="./img/created_two_vms.png">
+</p>
+
+<p align="center"> 
+  <img width="1200" height="600" src="./img/node01_yc_vm.png">
+</p>
+
+<p align="center"> 
+  <img width="1200" height="600" src="./img/node02_yc_vm.png">
+</p>
+
 
 
 ## Задача 3
@@ -128,7 +199,16 @@
 
 ### Решение:
 
+ * Применение плейбука для node1
+ ```
+ ansible-playbook provision.yml 
+ ```
 
+#### Результат - скриншот с Grafana (node01 IP 51.250.11.126):
+
+<p align="center"> 
+<img width="1200" height="600" src="./img/monitoring_stack_on_node1.png"> 
+</p>
 
 ## Задача 4 (*)
 
@@ -139,3 +219,17 @@
 
 
 ### Решение:
+
+ * Применение плейбука для node2
+ ```
+ ansible-playbook provision_monitoring_node.yml 
+ ```
+#### Результат - `nodeexporter_node2`, `cadvisor_node2` (node02 IP 51.250.13.22) на скриншотах с Grafana и Prometheus (node01 IP 51.250.11.126):
+
+<p align="center"> 
+<img width="1200" height="600" src="./img/node2_under_monitoring1.png"> 
+</p>
+
+<p align="center"> 
+<img width="1200" height="600" src="./img/node2_under_monitoring2.png"> 
+</p>
