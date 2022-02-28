@@ -233,3 +233,7 @@
 <p align="center"> 
 <img width="1200" height="600" src="./img/node2_under_monitoring2.png"> 
 </p>
+
+<p align="center" color="red"> 
+<font size="12" color="red">P.S. После выполнения задания удален сервисный аккаунт `service-acc1`. Наличие в конфигах связанной с ним ключевой информации - не критично.</font>
+</p>
